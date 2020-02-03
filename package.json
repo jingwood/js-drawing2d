@@ -1,0 +1,35 @@
+{
+  "name": "@jingwood/drawing2d",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "test": "parcel --out-dir output html/test.html",
+    "serve": "parcel --out-dir output html/test.html",
+    "build": "npx babel src -d dist"
+  },
+  "repository": "https://github.com/jingwood/js-drawing2d.git",
+  "author": "Jingwood <jingwood@unvell.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@jingwood/graphics-math": "^1.0.2",
+    "@jingwood/input-control": "^1.0.3",
+    "babel-core": "^6.26.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "7",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2017": "^6.24.1",
+    "parcel": "^1.12.4"
+  },
+  "bugs": {
+    "url": "https://github.com/jingwood/js-drawing2d/issues"
+  },
+  "homepage": "https://github.com/jingwood/js-drawing2d"
+}
