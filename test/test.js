@@ -26,11 +26,21 @@ window.addEventListener("load", e => {
   rect1.size.set(400, 300);
 
   scene.onmousemove = (e) => {
-    
+    rect1.origin = e.position;
+    scene.requestUpdateFrame();
   };
 
-  scene.ondrag = e => {
-    
+  scene.ondrag = e => {  
+    rect1.origin = e.position;
+
+    if (e.isKeyPressed(32)) {
+      rect1.angle += e.movement.x + e.movement.y;
+    } else {
+      rect1.size.width += e.movement.x;
+      rect1.size.height += e.movement.y;
+    }
+
+    scene.requestUpdateFrame();
   };
 
   scene.add(rect1);
