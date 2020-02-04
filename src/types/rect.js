@@ -24,6 +24,13 @@ export class Rect {
 				this.width = 0;
 				this.height = 0;
 				break;
+			
+			case 1:
+				if (typeof arguments[0] === "object") {
+					const { x, y, width, height } = arguments[0];
+					this.set(x, y, width, height);
+				}
+				break;
 
 			case 2:
 				this.x = arguments[0].x;
