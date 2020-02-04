@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Vec2, Matrix3, BBox2D } from "@jingwood/graphics-math";
-import { EventDispatcher } from "../utility/event";
+import { EventDispatcher } from "@jingwood/input-control";
 import { ObjectStyle } from "./style";
 import { EventArgument } from "./eventarg";
 import { Size } from "../types/size";
@@ -156,32 +156,12 @@ export class Object2D {
   }
 
   hitTestPoint(p) {
-    return this.bbox.contains(p);
+    return this.bbox.contains(this.pointToObject(p));
   }
 
   pointToObject(p) {
-    // let m = transformStack[transformStack.length - 1];
-    // let t = undefined;
-    // if (obj.origin.x !== 0 || obj.origin.y !== 0
-    //   || obj.angle !== 0
-    //   || obj.scale.x !== 1 || obj.scale.y !== 1) {
-
-    //   t = Matrix3.makeTranslation(obj.origin.x, obj.origin.y);
-    //   t.rotate(obj.angle);
-    //   t.scale(obj.scale.x, obj.scale.y);
-    
-    //   transformStack.push(t.clone());
-    //   m = m.mul(t);
-    // }
-    
-    // p = p.mulMat(m);
-
-    // if (t) {
-    //   transformStack.pop();
-    // }
-
-    // return new Vec2(p.x - this.origin.x, p.y - this.origin.y);
-    return p;
+    const t = this._transform.inverse();
+    return new Vec2(p).mulMat(t);
   }
 
   mousedown(e) {

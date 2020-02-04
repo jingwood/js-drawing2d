@@ -6,10 +6,8 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import "../utility/extensions.js";
-import "../utility/event";
 import { Vec2, Matrix3 } from "@jingwood/graphics-math";
-import { EventDispatcher } from "../utility/event";
+import { EventDispatcher } from "@jingwood/input-control";
 import { EventArgument } from "./eventarg";
 
 export class Scene2D {
@@ -80,8 +78,8 @@ export class Scene2D {
 
   eachObjectInv(handler) {
     for (let i = this.objects.length - 1; i >= 0; i--) {
-      var obj = this.objects[i];
-      if (!obj.eachChildInv(handler)) break;
+      const obj = this.objects[i];
+      if (obj.eachChildInv(handler) === false) break;
       if (handler(obj) === false) break;
     }
   }
@@ -99,10 +97,9 @@ export class Scene2D {
 
   findObjectByPosition(p) {
     let target = null;
-    const transformStack = [new Matrix3().loadIdentity()];
 
     this.eachObjectInv(obj => {
-      if (obj.visible && obj.hitTestPoint(p, transformStack)) {
+      if (obj.visible && obj.hitTestPoint(p)) {
         target = obj;
         return false;
       }
@@ -204,7 +201,7 @@ export class Scene2D {
 
   createEventArgument(arg, obj) {      
     if (obj) {
-      arg.localPosition = obj.pointToObject(e.position);
+      arg.localPosition = obj.pointToObject(arg.position);
     }
 
     return arg;
