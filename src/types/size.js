@@ -6,6 +6,8 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
+import { Vec2 } from "@jingwood/graphics-math";
+
 export class Size {
   constructor() {
     this.set(...arguments);
@@ -47,6 +49,10 @@ export class Size {
 
   mul(scalar) {
     return new Size(this.width * scalar, this.height * scalar);
+  }
+
+  get v() {
+    return new Vec2(this.width, this.height);
   }
 
   toArray() {
