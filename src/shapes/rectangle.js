@@ -22,7 +22,7 @@ export class Rectangle extends Object2D {
     this.rect.set(-width, -height, this.size.width, this.size.height);
   }
 
-  draw(g) {  
+  draw(g) {
     g.drawRect(this.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
     this.ondraw(g);
   }

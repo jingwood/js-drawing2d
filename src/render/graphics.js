@@ -21,7 +21,7 @@ export class Graphics2D {
 		this.resetDrawingStyle();
 
 		this.currentTransform = new Matrix3().loadIdentity();
-		this.transformStack = new Array();
+		this.transformStack = [];
 
 		if (this.options.scale) {
 			// this.pushScale(options.scale.x, options.scale.y);
@@ -31,12 +31,13 @@ export class Graphics2D {
 	pushTransform(t) {
 		this.transformStack.push(this.currentTransform);
 		t = t.mul(this.currentTransform);
+		this.currentTransform = t;
 		this.ctx.setTransform(t.a1, t.b1, t.a2, t.b2, t.a3, t.b3);
 	}
 
 	popTransform() {
 		this.currentTransform = this.transformStack.pop();
-		var t = this.currentTransform;
+		const t = this.currentTransform;
 		this.ctx.setTransform(t.a1, t.b1, t.a2, t.b2, t.a3, t.b3);
 	}
 
@@ -61,6 +62,9 @@ export class Graphics2D {
 	resetTransform() {
 		this.currentTransform.loadIdentity();
 		this.transformStack._t_clear();
+
+		const t = this.currentTransform;
+		this.ctx.setTransform(t.a1, t.b1, t.a2, t.b2, t.a3, t.b3);
 	}
 
 	setTransform(t) {

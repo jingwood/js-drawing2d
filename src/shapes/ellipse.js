@@ -14,7 +14,7 @@ export class Ellipse extends Rectangle {
   }
 
   draw(g) {
-    g.drawEllipse(this.rect);
+    g.drawEllipse(this.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
     this.ondraw(g);
   }
 }

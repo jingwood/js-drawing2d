@@ -36,7 +36,7 @@ export class Scene2D {
         obj.render(g);
       }
     }
-
+    
     this.ondraw(g);
   }
 
@@ -191,12 +191,12 @@ export class Scene2D {
     this.onenddrag(evtArg);
   }
 
-  keydown(key) {
-    this.onkeydown(key);
+  keydown(e) {
+    this.onkeydown(e);
   }
 
-  keyup(key) {
-    this.onkeyup(key);
+  keyup(e) {
+    this.onkeyup(e);
   }
 
   createEventArgument(arg, obj) {      

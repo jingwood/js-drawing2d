@@ -41,6 +41,7 @@ export class Object2D {
   constructor() {
     this.objects = [];
 
+    this._parent = null;
     this.visible = true;
     this.zIndex = 0;
     this.style = new ObjectStyle();
@@ -49,7 +50,7 @@ export class Object2D {
     this.bbox = new BBox2D();
     this.wbbox = new BBox2D();
     this._origin = new Vec2Property(this);
-    this._size = new SizeProperty(this);
+    this._size = new SizeProperty(this, 100, 100);
 
     this._angle = 0;
     this._scale = new Vec2Property(this, 1, 1);
@@ -117,22 +118,35 @@ export class Object2D {
     return this._transform;
   }
 
+  get parent() {
+    return this._parent;
+  }
+
+  set parent(p) {
+    if (this._parent !== p) {
+      this._parent = p;
+      this.update();
+    }
+  }
+
   add() {
-    for (var i = 0; i < arguments.length; i++) {
-      var arg = arguments[i];
+    for (let i = 0; i < arguments.length; i++) {
+      const arg = arguments[i];
       if (Array.isArray(arg)) {
-        for (var k = 0; k < arg.length; k++) {
+        for (let k = 0; k < arg.length; k++) {
           this.add(arg[k]);
         }
       }
       else {
         this.objects._t_pushIfNotExist(arg);
+        arg.parent = this;
       }
     }
   }
 
   remove(obj) {
     this.objects._t_remove(obj);
+    obj.parent = null;
   }
 
   clear() {
@@ -215,9 +229,9 @@ export class Object2D {
       if (style.fillColor) g.fillColor = style.fillColor;
     }
   
-    if (this._transform.notIdentity) {
-      g.pushTransform(this._transform);
-    }
+    // if (this._transform.notIdentity) {
+      g.setTransform(this._transform);
+    // }
       
     this.draw(g);
 
@@ -228,11 +242,10 @@ export class Object2D {
       }
     }
 
-    if (this._transform.notIdentity) {
-      g.popTransform();
-    }
-
-    // g.resetDrawingStyle();
+    g.resetTransform();
+    // if (this._transform.notIdentity) {
+    //   g.popTransform();
+    // }
 
     if (g.options.debugMode && g.options.debugOptions.showBBox) {
       // g.drawRect(this.bbox.rect, 1, "blue");
@@ -248,12 +261,15 @@ export class Object2D {
     this.updateTransform();
     this.updateBoundingBox();
     this.updateWorldBoundingBox();
+    this.updateChildren();
   }
 
   updateTransform() {
+
+    this._transform.loadIdentity();
+    this._transform.notIdentity = false;
+
     const t = this._transform;
-    t.loadIdentity();
-    t.notIdentity = false;
 
     if (this.origin.x !== 0 || this.origin.y !== 0
       || this.angle !== 0
@@ -262,6 +278,22 @@ export class Object2D {
       t.rotate(this.angle);
       t.scale(this.scale.x, this.scale.y);
       t.notIdentity = true;
+    }
+
+    if (this.parent) {
+      // if (!this.notIdentity) {
+      //   this._transform.copyFrom(this.parent.transform);
+      // } else {
+        this._transform = this._transform.mul(this.parent.transform);
+        this._transform.notIdentity = true;
+      // }
+    }
+    
+  }
+
+  updateChildren() {
+    for (const child of this.objects) {
+      child.update();
     }
   }
   
@@ -332,12 +364,12 @@ class Vec2Property extends Vec2 {
 }
 
 class SizeProperty extends Size {
-  constructor(obj) {
+  constructor(obj, width = 0, height = 0) {
     super();
     this.obj = obj;
 
-    this._width = 0;
-    this._height = 0;
+    this._width = width;
+    this._height = height;
   }
 
   notify() {

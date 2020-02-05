@@ -57,7 +57,7 @@ export class Renderer2D {
     this.inputController.onkeyup = e => { if (this.currentScene) this.currentScene.keyup(this.transformEventArgument(e)); }
 
     if (this.options.debugMode) {
-      this.inputController.onkeydown = e => {
+      this.inputController.on("keydown", e => {
         switch (e.lastKeyCode) {
           case Keys.B:
             this.options.debugOptions.showBBox = !this.options.debugOptions.showBBox;
@@ -67,7 +67,7 @@ export class Renderer2D {
         if (this.currentScene) {
           this.currentScene.requestUpdateFrame();
         }
-      }
+      });
     }
     
     this.canvas.tabIndex = 0;
