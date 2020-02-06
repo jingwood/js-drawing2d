@@ -47,7 +47,7 @@ export class Graphics2D {
 		return m;
 	}
 
-	pushRotation(angle, x, y) {
+	pushRotation(angle, x = 0, y = 0) {
 		const m = Matrix3.makeRotation(angle, x, y);
 		this.pushTransform(m);
 		return m;
@@ -68,6 +68,10 @@ export class Graphics2D {
 	}
 
 	setTransform(t) {
+		if (this.transformStack.length > 0) {
+			this.transformStack = [];
+		}
+		this.currentTransform.copyFrom(t);
 		this.ctx.setTransform(t.a1, t.b1, t.a2, t.b2, t.a3, t.b3);
 	}
 
@@ -246,7 +250,7 @@ export class Graphics2D {
 		const ctx = this.ctx;
 	
 		ctx.fillStyle = color || "black";		
-		ctx.font = font || "12px Arial";
+		ctx.font = font || "16px Arial";
 		let { x, y } = p;
 
 		if (font) ctx.font = font;

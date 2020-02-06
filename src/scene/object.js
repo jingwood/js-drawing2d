@@ -51,6 +51,7 @@ export class Object2D {
     this.wbbox = new BBox2D();
     this._origin = new Vec2Property(this);
     this._size = new SizeProperty(this, 100, 100);
+    this._worldOrigin = new Vec2();
 
     this._angle = 0;
     this._scale = new Vec2Property(this, 1, 1);
@@ -129,6 +130,10 @@ export class Object2D {
     }
   }
 
+  get worldOrigin() {
+    return this._worldOrigin;
+  }
+
   add() {
     for (let i = 0; i < arguments.length; i++) {
       const arg = arguments[i];
@@ -154,8 +159,8 @@ export class Object2D {
   }
 
   eachChild(handler) {
-    for (var i = 0; i < this.objects.length; i++) {
-      var child = this.objects[i];
+    for (let i = 0; i < this.objects.length; i++) {
+      const child = this.objects[i];
       if (handler(child) === false) break;
       if (child.eachChild(handler) === false) break;
     }
@@ -242,6 +247,8 @@ export class Object2D {
       }
     }
 
+    this.drawAfterChildren(g);
+
     g.resetTransform();
     // if (this._transform.notIdentity) {
     //   g.popTransform();
@@ -255,6 +262,9 @@ export class Object2D {
 
   draw(g) {
     this.ondraw(g);
+  }
+
+  drawAfterChildren(g) {
   }
 
   update() {
@@ -289,6 +299,7 @@ export class Object2D {
       // }
     }
     
+    this._worldOrigin = this.origin.mulMat(this._transform);
   }
 
   updateChildren() {
@@ -360,6 +371,21 @@ class Vec2Property extends Vec2 {
       this._y = v;
       this.notify();
     }
+  }
+}
+
+class ReadonlyProperty {
+  constructor(obj, name, getter) {
+    this.obj = obj;
+    Object.defineProperty(obj, name, {
+      get: getter
+    });
+  }
+
+  static define(obj, name, getter) {
+    Object.defineProperty(obj, name, {
+      get: getter
+    });
   }
 }
 

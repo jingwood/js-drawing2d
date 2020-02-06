@@ -24,6 +24,10 @@ class TestRect extends DraggableObject {
 
   draw(g) {
     g.drawRect(this.bbox.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
+
+    if (g.options.debugMode) {
+      g.drawText(`(${this._worldOrigin.x}, ${this._worldOrigin.y})`, { x: 0, y: 20 }, "black", "center");
+    }
   }
 }
 
@@ -32,6 +36,8 @@ window.addEventListener("load", e => {
 
   const scene = new Scene2D();
   renderer.show(scene);
+
+  let moveGuideLines = [];
 
   scene.ondraw = g => {
     // g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
@@ -58,18 +64,19 @@ window.addEventListener("load", e => {
   Object2D.prototype.on("mousedown", function(e) {
   });
 
-  const r11 = new Rectangle();
+  const r11 = new TestRect();
   r11.origin.set(100, 0);
   r11.style.fillColor = "lightgreen";
   // r11.angle = 30;
   rect1.add(r11);
 
-  let moveGuideLines = [];
 
-  function findNearestObject(p) {
+  function findNearestObject(srcObj, p) {
     moveGuideLines = [];
 
     scene.eachObject(obj => {
+      if (obj === srcObj) return;
+
       const rect = new Rect(obj.wbbox.rect);
       const checkDistance = 20;
       
@@ -88,7 +95,7 @@ window.addEventListener("load", e => {
     const targetOrigin = new Vec2(e.position).sub(this.dragOffset);
     const targetTopLeft = targetOrigin.sub(rect1.size.v.mul(0.5));
 
-    findNearestObject(targetTopLeft);
+    findNearestObject(rect1, targetTopLeft);
 
     moveGuideLines.sort((l1, l2) => l1.dist - l2.dist);
 

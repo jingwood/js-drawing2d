@@ -36,7 +36,7 @@ export class Scene2D {
         obj.render(g);
       }
     }
-    
+
     this.ondraw(g);
   }
 
@@ -67,10 +67,10 @@ export class Scene2D {
   }
 
   eachObject(handler) {
-    var ret = undefined;
+    let ret = undefined;
 
-    for (var i = 0; i < this.objects.length; i++) {
-      var obj = this.objects[i];
+    for (let i = 0; i < this.objects.length; i++) {
+      const obj = this.objects[i];
       if (handler(obj) === false) break;
       if (obj.eachChild(handler) === false) break;
     }
