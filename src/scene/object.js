@@ -158,19 +158,39 @@ export class Object2D {
     this.objects._t_clear();
   }
 
-  eachChild(handler) {
+  eachChild(handler, options) {
     for (let i = 0; i < this.objects.length; i++) {
       const child = this.objects[i];
-      if (handler(child) === false) break;
-      if (child.eachChild(handler) === false) break;
+
+      if (!options || typeof options.filter !== "function"
+        || !options.filter(obj)) {
+        
+        if (handler(child) === false) return false;
+
+        if (!options
+          || typeof options.childrenFilter !== "function"
+          || !options.childrenFilter(this)) {
+          if (child.eachChild(handler, options) === false) return false;
+        }
+      }
     }
   }
 
-  eachChildInv(handler) {
+  eachChildInv(handler, options) {
     for (let i = this.objects.length - 1; i >= 0; i--) {
       const child = this.objects[i];
-      if (child.eachChildInv(handler) === false) return false;
-      if (handler(child) === false) return false;
+
+      if (!options || typeof options.filter !== "function"
+        || !options.filter(obj)) {
+               
+        if (!options
+          || typeof options.childrenFilter !== "function"
+          || !options.childrenFilter(this)) {
+            if (child.eachChildInv(handler, options) === false) return false;
+        }
+
+        if (handler(child) === false) return false;
+      }
     }
   }
 

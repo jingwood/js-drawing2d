@@ -66,21 +66,27 @@ export class Scene2D {
     this.objects.remove(obj);
   }
 
-  eachObject(handler) {
-    let ret = undefined;
-
+  eachObject(handler, options) {
     for (let i = 0; i < this.objects.length; i++) {
       const obj = this.objects[i];
-      if (handler(obj) === false) break;
-      if (obj.eachChild(handler) === false) break;
+
+      if (!options || typeof options.filter !== "function"
+        || !options.filter(obj)) {
+        if (handler(obj) === false) return false;
+        if (obj.eachChild(handler, options) === false) return false;
+      }
     }
   }
 
-  eachObjectInv(handler) {
+  eachObjectInv(handler, options) {
     for (let i = this.objects.length - 1; i >= 0; i--) {
       const obj = this.objects[i];
-      if (obj.eachChildInv(handler) === false) break;
-      if (handler(obj) === false) break;
+
+      if (!options || typeof options.filter !== "function"
+        || !options.filter(obj)) {
+        if (obj.eachChildInv(handler, options) === false) return false;
+        if (handler(obj) === false) return false;
+      }
     }
   }
 
