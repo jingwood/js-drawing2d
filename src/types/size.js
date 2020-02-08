@@ -48,11 +48,23 @@ export class Size {
   }
 
   mul(scalar) {
-    return new Size(this.width * scalar, this.height * scalar);
+    return Size.mul(this, scalar);
+  }
+
+  static mul(size, scalar) {
+    if (typeof scalar === "object") {
+      return new Size(size.width * scalar.width, size.height * scalar.height);
+    } else if (!isNaN(scalar)) {
+      return new Size(size.width * scalar, size.height * scalar);
+    }
   }
 
   get v() {
-    return new Vec2(this.width, this.height);
+    return toVector(this);
+  }
+
+  static toVector(size) {
+    return new Vec2(size.width, size.height);
   }
 
   toArray() {

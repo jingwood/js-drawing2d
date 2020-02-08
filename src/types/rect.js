@@ -9,6 +9,7 @@
 import { Vec2, BBox2D, MathFunctions } from "@jingwood/graphics-math";
 import { LineSegment } from "./line.js"
 import { Size } from "./size.js";
+import { Polygon } from "./polygon";
 
 export class Rect {
 	constructor() {
@@ -166,6 +167,14 @@ export class Rect {
 		var maxy = Math.max(p1.y, p2.y);
 	
 		return new Rect(minx, miny, maxx - minx, maxy - miny);
+	}
+
+	toPolygon() {
+		return Rect.toPolygon(this);
+	}
+
+	static toPolygon(rect) {
+		return new Polygon([rect.topLeft, rect.topRight, rect.bottomRight, rect.bottomLeft]);
 	}
 }
 

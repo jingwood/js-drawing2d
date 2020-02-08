@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { BBox2D, MathFunctions } from "@jingwood/graphics-math";
+import { Vec2, BBox2D, MathFunctions } from "@jingwood/graphics-math";
 
 export class Polygon {
 	constructor(points) {
@@ -84,5 +84,12 @@ export class Polygon {
 			return Number.MAX_VALUE;
 		else
 			return MathFunctions.distancePointToPolygon(p, this._points);
+	}
+
+	transform(matrix) {
+		for (let i = 0; i < this._points.length;i++) {
+			this._points[i] = this._points[i].mulMat(matrix);
+		}
+		this.updateBoundingBox();
 	}
 }
