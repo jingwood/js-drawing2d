@@ -153,7 +153,7 @@ export class Graphics2D {
 		}
 	}
 
-	drawPoint(p, size = 3, strikeColor = "transparent", fillColor = "black") {
+	drawPoint(p, size = 3, strikeColor, fillColor) {
 		this.drawEllipse(new Rect(p.x - size / 2, p.y - size / 2, size, size), 0, strikeColor, fillColor);
 	}
 
@@ -163,22 +163,13 @@ export class Graphics2D {
 	// };
 
 	drawEllipse(rect, strokeWidth, strokeColor, fillColor) {
-		var ctx = this.ctx;
-		
-		strokeWidth = strokeWidth || this.strokeWidth;
-		strokeColor = strokeColor || this.strokeColor;
-		fillColor = fillColor || this.fillColor;
+		const ctx = this.ctx;
 
-		var w = rect.width;
-		var h = rect.height;
-		var hw = w / 2;
-		var hh = h / 2;
-		// var x = rect.x - hw;
-		// var y = rect.y - hh;
-		var x = rect.x;
-		var y = rect.y;
+		const w = rect.width, h = rect.height;
+		const hw = w / 2, hh = h / 2;
+		const x = rect.x, y = rect.y;
 	
-		var kappa = 0.5522848,
+		const kappa = 0.5522848,
 			ox = hw * kappa,   // control point offset horizontal
 			oy = hh * kappa,   // control point offset vertical
 			xe = x + w,        // x-end
@@ -199,13 +190,9 @@ export class Graphics2D {
 			ctx.fillStyle = fillColor;
 			ctx.fill();
 		}
-
-		if (typeof strokeWidth === "undefined") {
-			strokeWidth = 1;
-		}
 	
 		if (strokeWidth || strokeColor) {
-			ctx.lineWidth = strokeWidth || 1;
+			ctx.lineWidth = strokeWidth;
 			ctx.strokeStyle = strokeColor || "black";
 			ctx.stroke();
 		}
@@ -419,10 +406,6 @@ export class Graphics2D {
 			ctx.lineTo(p0.x, p0.y);
 
 		ctx.closePath();
-				
-		strokeWidth = strokeWidth || this.strokeWidth || 1;
-		strokeColor = strokeColor || this.strokeColor || "black";
-		fillColor = fillColor || this.fillColor;
 		
 		if (fillColor) {
 			ctx.fillStyle = fillColor;

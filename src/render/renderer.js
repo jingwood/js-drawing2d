@@ -31,14 +31,14 @@ export class Renderer2D {
       this.canvas = document.getElementById(this.options.canvasId);
 
       if (!this.canvas) {
-        throw "Canvas not found: " + this.options.canvasId;
+        throw Error("Canvas not found: " + this.options.canvasId);
       }
     }
 
     this.ctx = this.canvas.getContext("2d");
 
     if (!this.ctx) {
-      throw "Can't get context 2d";
+      throw Error("Can't get context 2d");
     }
 
     this.graphics = new Graphics2D(this.canvas, this.ctx, this.options);
@@ -113,9 +113,9 @@ export class Renderer2D {
       requestAnimationFrame(_ => this.render());
      
       this.clear();
-      
-      this.currentScene.render(this.graphics);
+
       this.currentScene.requestedUpdateFrame = false;
+      this.currentScene.render(this.graphics);
     }
   }
 

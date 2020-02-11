@@ -6,7 +6,8 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Vec2, BBox2D, MathFunctions } from "@jingwood/graphics-math";
+import { Vec2, BoundingBox2D as BBox2D, MathFunctions } from "@jingwood/graphics-math";
+import { MathFunctions2 } from "@jingwood/graphics-math";
 
 export class Polygon {
 	constructor(points) {
@@ -37,12 +38,12 @@ export class Polygon {
 		min.x = this._points[0].x;
 		min.y = this._points[0].y;
 
-		this._points.forEach(({ x, y }) => {
+		for (const { x, y } of this._points) {
 			if (min.x > x) min.x = x;
 			if (min.y > y) min.y = y;
 			if (max.x < x) max.x = x;
 			if (max.y < y) max.y = y;
-		});
+		};
 	}
 
 	eachEdge(iterator) {
@@ -66,7 +67,7 @@ export class Polygon {
 			return false;
 		}
 		
-		return MathFunctions.polygonContainsPoint(this._points, p);
+		return MathFunctions2.polygonContainsPoint(this._points, p);
 	}
 
 	containsRect(rect) {
@@ -76,14 +77,14 @@ export class Polygon {
 			return false;
 		}
 
-		return MathFunctions.polygonContainsRect(this._points, rect);
+		return MathFunctions2.polygonContainsRect(this._points, rect);
 	}
 
 	distanceToPoint(p) {
 		if (!this._points)
 			return Number.MAX_VALUE;
 		else
-			return MathFunctions.distancePointToPolygon(p, this._points);
+			return MathFunctions2.distancePointToPolygon(p, this._points);
 	}
 
 	transform(matrix) {

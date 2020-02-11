@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Vec2, Matrix3, BBox2D } from "@jingwood/graphics-math";
+import { Vec2, Matrix3, BoundingBox2D as BBox2D } from "@jingwood/graphics-math";
 import { EventDispatcher } from "@jingwood/input-control";
 import { ObjectStyle } from "./style";
 import { EventArgument } from "./eventarg";
@@ -163,7 +163,7 @@ export class Object2D {
       const child = this.objects[i];
 
       if (!options || typeof options.filter !== "function"
-        || !options.filter(obj)) {
+        || !options.filter(child)) {
         
         if (handler(child) === false) return false;
 
@@ -195,12 +195,16 @@ export class Object2D {
   }
 
   hitTestPoint(p) {
-    return this.bbox.contains(this.pointToObject(p));
+    return this.bbox.contains(this.pointToLocal(p));
   }
 
-  pointToObject(p) {
+  pointToLocal(p) {
     const t = this._transform.inverse();
     return new Vec2(p).mulMat(t);
+  }
+
+  pointToWorld(p) {
+    return new Vec2(p).mulMat(this._transform);
   }
 
   mousedown(e) {
@@ -254,9 +258,7 @@ export class Object2D {
       if (style.fillColor) g.fillColor = style.fillColor;
     }
   
-    // if (this._transform.notIdentity) {
-      g.setTransform(this._transform);
-    // }
+    g.setTransform(this._transform);
       
     this.draw(g);
 
@@ -269,13 +271,8 @@ export class Object2D {
 
     this.drawAfterChildren(g);
 
-    g.resetTransform();
-    // if (this._transform.notIdentity) {
-    //   g.popTransform();
-    // }
-
     if (g.options.debugMode && g.options.debugOptions.showBBox) {
-      // g.drawRect(this.bbox.rect, 1, "blue");
+      g.resetTransform();
       g.drawRect(this.wbbox.rect, 1, "red");
     }
   }

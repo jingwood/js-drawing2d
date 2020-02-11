@@ -16,6 +16,8 @@ export class DraggableObject extends Object2D {
     const targetOrigin = Vec2.sub(e.position, this.dragOffset);
     const newTargetOrigin = this.beforeMove(targetOrigin);
     this.origin.set(newTargetOrigin);
+
+    super.drag(e);
   }
 
   beforeMove(newpos) {

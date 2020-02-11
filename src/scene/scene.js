@@ -37,6 +37,8 @@ export class Scene2D {
       }
     }
 
+    g.resetTransform();
+
     this.ondraw(g);
   }
 
@@ -207,7 +209,7 @@ export class Scene2D {
 
   createEventArgument(arg, obj) {      
     if (obj) {
-      arg.localPosition = obj.pointToObject(arg.position);
+      arg.localPosition = obj.pointToLocal(arg.position);
     }
 
     return arg;

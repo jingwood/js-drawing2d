@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Vec2, BBox2D, MathFunctions } from "@jingwood/graphics-math";
+import { Vec2, BoundingBox2D as BBox2D, MathFunctions2 } from "@jingwood/graphics-math";
 import { LineSegment } from "./line.js"
 import { Size } from "./size.js";
 import { Polygon } from "./polygon";
@@ -95,11 +95,15 @@ export class Rect {
 	}
 
 	set size(v) {
-		this._size.set(v);
+		this._size.set(v.width, v.height);
 	}
 
 	get topLeft() {
 		return new Vec2(this.x, this.y);
+	}
+
+	get topCenter() {
+		return new Vec2(this.x + this.width * 0.5, this.y);
 	}
 
 	get topRight() {
@@ -110,8 +114,20 @@ export class Rect {
 		return new Vec2(this.x, this.bottom);
 	}
 
+	get bottomCenter() {
+		return new Vec2(this.x + this.width * 0.5, this.bottom);
+	}
+
 	get bottomRight() {
 		return new Vec2(this.right, this.bottom);
+	}
+
+	get leftCenter() {
+		return new Vec2(this.x, this.y + this.height * 0.5);
+	}
+	
+	get rightCenter() {
+		return new Vec2(this.right, this.y + this.height * 0.5);
 	}
 
 	get topEdge() {
@@ -149,7 +165,7 @@ export class Rect {
 	}
 	
 	intersectsRect(r2) {
-		return MathFunctions.rectIntersectsRect(this, r2);
+		return MathFunctions2.rectIntersectsRect(this, r2);
 	}
 
 	bbox() {
@@ -178,42 +194,29 @@ export class Rect {
 	}
 }
 
-class SizeProperty extends Size {
+class SizeProperty {
   constructor(rect) {
-		super();
-		this.rect = rect;
+		if (!rect) throw Error("Must specify an instance of rect type");
 	}
 	
-	set() {
-		super.set(...arguments);
-
-		if (this.rect) {
-			this.rect.width = this.width;
-			this.rect.height = this.height;
-		}
+	set(width, height) {
+		this.rect.width = width;
+		this.rect.height = height;
 	}
 
   get width() {
-		return super.width;
+		return this.rect.width;
 	}
 
 	set width(v) {
-		super.width = v;
-
-		if (this.rect) {
-			this.rect.width = v;
-		}
+		this.rect.width = v;
 	}
 
   get height() {
-    return super.height;
+    return this.rect.height;
   }
 
 	set height(v) {
-		super.height = v;
-
-		if (this.rect) {
-			this.rect.height = v;
-		}
-  }
+		this.rect.height = v;
+	}
 }

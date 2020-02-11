@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { BBox2D } from "@jingwood/graphics-math";
+import { BoundingBox2D as BBox2D } from "@jingwood/graphics-math";
 
 export class LineSegment {
 	constructor(x1, y1, x2, y2) {

@@ -8,7 +8,7 @@
 
 import { Vec2, Matrix3 } from "@jingwood/graphics-math";
 import { Keys } from "@jingwood/input-control";
-import { MathFunctions as _mf } from "@jingwood/graphics-math";
+import { MathFunctions2 as _mf2 } from "@jingwood/graphics-math";
 import { Renderer2D } from "../src/render/renderer.js";
 import { Scene2D } from "../src/scene/scene.js";
 import { Rectangle } from "../src/shapes/rectangle.js";
@@ -17,12 +17,13 @@ import { Rect } from "../src/types/rect";
 import { Object2D } from "../src/scene/object.js";
 import { DraggableObject } from "../src/shapes/draggable";
 import { Size } from "../src/types/size";
+import { Polygon } from "../src/types/polygon.js";
 
 if (!Object.prototype._t_foreach) {
   Object.defineProperty(Object.prototype, "_t_foreach", {
     value: function(iterator) {
       if (this == null) {
-        throw "Not an object";
+        throw Error("Not an object");
       }
       const _this = this || window;
       for (const key in _this) {
@@ -39,6 +40,19 @@ if (!Object.prototype._t_foreach) {
 class TestRect extends DraggableObject {
   constructor() {
     super();
+
+    this.dragToSnapBehavior = new DragToSnapBehavior(this);
+  }
+
+  drag(e) {
+    if (e.isKeyPressed(Keys.R)) {
+      this.angle += e.movement.x + e.movement.y;
+    } else if (e.isKeyPressed(Keys.S)) {
+      this.size.width += e.movement.x;
+      this.size.height += e.movement.y;
+    } else {
+      super.drag(e);
+    }
   }
 
   draw(g) {
@@ -52,55 +66,204 @@ class TestRect extends DraggableObject {
   }
 }
 
+class DragToMoveBehavior {
+  constructor() {
+  }
+}
+
+class DragToSnapBehavior {
+  constructor(obj) {
+    this.obj = obj;
+
+    this.obj.on("begindrag", e => {
+      this.obj.dragOffset = Vec2.sub(e.position, this.origin);
+    });
+
+    this.obj.on("drag", e => {
+      this.dragToSnap(e.position);
+    });
+
+    this.obj.on("enddrag", _ => {
+      DragToSnapBehavior.resetGuideLines();
+    });
+  }
+
+  dragToSnap(originPos) {
+    const obj = this.obj;
+
+    DragToSnapBehavior.resetGuideLines();
+    const guideLines = DragToSnapBehavior.guideLines;
+    
+    const targetOrigin = Vec2.sub(originPos, this.obj.dragOffset);
+    const localTargetOrigin = obj.pointToLocal(targetOrigin);
+
+    const hs = Size.toVector(obj.size).mul(0.5);
+    const rect = new Rect(Vec2.sub(localTargetOrigin, hs), obj.size);
+    const rectPolygon = new Polygon(DragToSnapBehavior.rectToPoints(rect));
+    rectPolygon.transform(obj.transform);
+
+    DragToSnapBehavior.findSnapObjects(obj, rectPolygon.points);
+
+    for (let i = 0; i < 9; i++) {
+      const parr = guideLines.points[i],
+        parrx = guideLines.x[i], parry = guideLines.y[i];
+
+      if (parr.length > 0) {
+        parr.sort((a, b) => a.dist - b.dist);
+      }
+        
+      if (parrx.length > 0) {
+        parrx.sort((a, b) => a.dist - b.dist);
+      }
+
+      if (parry.length > 0) {
+        parry.sort((a, b) => a.dist - b.dist);
+      }
+    }
+
+    let xFixed = false, yFixed = false;
+
+    for (const [go] of guideLines.points) {
+      if (go) {
+        targetOrigin.x += go.dp.x - go.sp.x;
+        targetOrigin.y += go.dp.y - go.sp.y;
+        xFixed = true, yFixed = true;
+        break;
+      }
+    }
+      
+    if (!yFixed) {
+      for (const [go] of guideLines.x) {
+        if (go) {
+          targetOrigin.y += go.dp.y - go.sp.y;
+          yFixed = true;
+          break;
+        }
+      }
+    }
+
+    if (!xFixed) {
+      for (const [go] of guideLines.y) {
+        if (go) {
+          targetOrigin.x += go.dp.x - go.sp.x;
+          xFixed = true;
+          break;
+        }
+      }
+    }
+      
+    this.obj.origin.set(targetOrigin);
+  }
+
+  static findSnapObjects(srcObj, srcPoints) {
+    const guideLines = DragToSnapBehavior.guideLines;
+
+    function findNearestPoints(destPoints) {
+      const checkDistance = 30;
+
+      function addToArray(parr, go) {
+        while (parr.length > 0 && go.dist < parr[parr.length - 1].dist) {
+          parr.pop();
+        }
+        parr.push(go);
+      }
+
+      for (let i = 0; i < 9; i++) {
+        const sp = srcPoints[i];
+
+        const parr = guideLines.points[i],
+          parrx = guideLines.x[i],
+          parry = guideLines.y[i];
+
+        for (const dp of destPoints) {
+          const kx = dp.x - sp.x, ky = dp.y - sp.y;
+          let dist = Math.sqrt(kx * kx + ky * ky);
+
+          if (dist < checkDistance) {
+            addToArray(parr, { sp, dp, dist });
+          }
+          else if (parr.length == 0 && (dist = Math.abs(ky)) < checkDistance) {
+            addToArray(parrx, { sp, dp, dist });
+          } else if ((dist = Math.abs(kx)) < checkDistance) {
+            addToArray(parry, { sp, dp, dist });
+          }
+        }
+      }
+    }
+
+    if (DragToSnapBehavior.scene) {
+      DragToSnapBehavior.scene.eachObject(obj => {
+        const rectPolygon = new Polygon(DragToSnapBehavior.rectToPoints(new Rect(obj.bbox.rect)));
+        rectPolygon.transform(obj.transform);
+        findNearestPoints(rectPolygon.points);
+      }, {
+        filter: obj => obj === srcObj
+      });
+    }
+  }
+
+  static rectToPoints(rect) {
+    return [rect.topLeft, rect.topCenter, rect.topRight,
+    rect.leftCenter, rect.origin, rect.rightCenter,
+    rect.bottomLeft, rect.bottomCenter, rect.bottomRight];
+  }
+
+  static resetGuideLines() {
+    const guideLines = DragToSnapBehavior.guideLines;
+    guideLines.points = [[], [], [], [], [], [], [], [], []];
+    guideLines.x = [[], [], [], [], [], [], [], [], []];
+    guideLines.y = [[], [], [], [], [], [], [], [], []];
+  }
+
+  static drawGuideLines(g) {
+    const guideLines = DragToSnapBehavior.guideLines;
+    if (!guideLines) return;
+
+    const maxx = g.canvas.width, maxy = g.canvas.height;
+
+    if (guideLines.points) {
+      for (const [go] of guideLines.points) {
+        if (go) {
+          function drawCross(p) {
+            const size = 7;
+            g.drawLine({ x: p.x - size, y: p.y - size }, { x: p.x + size, y: p.y + size }, "2", "black");
+            g.drawLine({ x: p.x + size, y: p.y - size }, { x: p.x - size, y: p.y + size }, "2", "black");
+          }
+
+          drawCross(go.sp);
+          drawCross(go.dp);
+        }
+      }
+    }
+
+    if (guideLines.x) {
+      for (const [p] of guideLines.x) {
+        if (p) g.drawLine({ x: 0, y: p.dp.y }, { x: maxx, y: p.dp.y }, "2", "red");
+      }
+    }
+
+    if (guideLines.y) {
+      for (const [p] of guideLines.y) {
+        if (p) g.drawLine({ x: p.dp.x, y: 0 }, { x: p.dp.x, y: maxy }, "2", "blue");
+      }
+    }
+  }
+}
+
+DragToSnapBehavior.scene = null;
+DragToSnapBehavior.guideLines = {};
+
 window.addEventListener("load", e => {
   const renderer = new Renderer2D();
 
   const scene = new Scene2D();
   renderer.show(scene);
 
-  let moveGuideLines = [];
-
-  const guideLines = {
-    x: [],
-    y: [],
-
-    alternates: {
-      right: [],
-      left: [],
-      top: [],
-      bottom: [],
-    }
-  };
-
+  DragToSnapBehavior.scene = scene;
   scene.ondraw = g => {
     g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
 
-    const maxx = renderer.renderSize.width, maxy = renderer.renderSize.height;
-
-    guideLines.alternates._t_foreach((srcType, alt) => {
-      if (alt.length > 0) {
-        const gl = alt[0];
-        const line = gl.l;
-
-        switch (gl.destType) {
-          case "left":
-            g.drawLine({ x: line.start.x, y: 0 }, { x: line.start.x, y: maxy }, "2", "blue");
-            break;
-              
-          case "right":
-            g.drawLine({ x: line.end.x, y: 0 }, { x: line.end.x, y: maxy }, "2", "blue");
-            break;
- 
-          case "top":
-            g.drawLine({ x: 0, y: line.start.y }, { x: maxx, y: line.start.y }, "2", "red");
-            break;
-              
-          case "bottom":
-            g.drawLine({ x: 0, y: line.end.y }, { x: maxx, y: line.end.y }, "2", "red");
-            break;
-        }
-      }
-    });
+    DragToSnapBehavior.drawGuideLines(g);
   };
 
   const rect1 = new TestRect();
@@ -113,148 +276,18 @@ window.addEventListener("load", e => {
   r11.angle = 30;
   rect1.add(r11);
 
-  function findNearestObject(srcObj, p, srcType) {
-    function findEdgeOfObject(l, destType) {
-      const checkDistance = 30;
-
-      const dist = _mf.distancePointToLine2D(p, l);
-      if (dist < checkDistance) {
-        const gl = { srcType, destType, dist, l };
-        guideLines.alternates[srcType].push(gl);
-      }
-    }
-
-    scene.eachObject(obj => {
-      const rect = new Rect(obj.wbbox.rect);
-      
-      if (srcType === "left" || srcType === "right") {
-        findEdgeOfObject(rect.rightEdge, "right");
-        findEdgeOfObject(rect.leftEdge, "left");
-      }
-
-      if (srcType === "top" || srcType === "bottom") {
-        findEdgeOfObject(rect.topEdge, "top");
-        findEdgeOfObject(rect.bottomEdge, "bottom");
-      }
-    }, {
-      filter: obj => obj === srcObj
-    });
-
-  }
-
-  rect1.drag = function(e) {
-
-    const obj = rect1;
-
-    if (e.isKeyPressed(Keys.R)) {
-      obj.angle += e.movement.x + e.movement.y;
-    } else if (e.isKeyPressed(Keys.S)) {
-      obj.size.width += e.movement.x;
-      obj.size.height += e.movement.y;
-    } else {
-
-      const targetOrigin = Vec2.sub(e.position, this.dragOffset);
-
-      moveGuideLines = [];
-      guideLines.alternates = {
-        right: [],
-        left: [],
-        top: [],
-        bottom: [],
-      };
-  
-      const hs = Size.toVector(obj.bbox.size).mul(0.5);
-      const rectp = new Rect(targetOrigin.sub(hs), obj.size).toPolygon();
-      rectp.transform(Matrix3.makeRotation(obj.angle));
- 
-      findNearestObject(obj, rectp.points[0], "left");
-      findNearestObject(obj, rectp.points[1], "right");
-      findNearestObject(obj, rectp.points[0], "top");
-      findNearestObject(obj, rectp.points[1], "bottom");
-  
-      guideLines.alternates._t_foreach((_, alt) => {
-        if (alt.length > 0) {
-          alt.sort((l1, l2) => l1.dist - l2.dist);
-          moveGuideLines.push(alt[0]);
-        }
-      });
-
-
-      if (moveGuideLines.length === 0) {
-        obj.origin.set(targetOrigin);
-      } else {
-
-        const hw = obj.size.width * 0.5, hh = obj.size.height * 0.5;
-
-        guideLines.alternates._t_foreach((srcType, alt) => {
-          if (alt.length > 0) {
-            const gl = alt[0];
-            const l = gl.l;
-
-            switch (srcType) {
-              case "left":
-                switch (gl.destType) {
-                  case "left":
-                    targetOrigin.x = l.start.x + hw;
-                    break;
-                  case "right":
-                    targetOrigin.x = l.end.x + hw;
-                    break;
-                }
-                break;
-          
-              case "right":
-                switch (gl.destType) {
-                  case "left":
-                    targetOrigin.x = l.start.x - hw;
-                    break;
-                  case "right":
-                    targetOrigin.x = l.end.x - hw;
-                    break;
-                }
-                break;
-           
-              case "top":
-                switch (gl.destType) {
-                  case "top":
-                    targetOrigin.y = l.start.y + hh;
-                    break;
-                  case "bottom":
-                    targetOrigin.y = l.end.y + hh;
-                    break;
-                }
-                break;
-            
-              case "bottom":
-                switch (gl.destType) {
-                  case "top":
-                    targetOrigin.y = l.start.y - hh;
-                    break;
-                  case "bottom":
-                    targetOrigin.y = l.end.y - hh;
-                    break;
-                }
-                break;
-            }
-          }
-        });
-
-        obj.origin.set(targetOrigin);
-      }
-    }
-
-    scene.requestUpdateFrame();
-  };
-
-  scene.on("enddrag", function(e) {
-    moveGuideLines = [];
-  });
-
   scene.add(rect1);
 
   const rect2 = new TestRect();
   rect2.origin.set(1000, 1000);
   rect2.size.set(400, 300);
+  // rect2.angle = 30;
   scene.add(rect2);
+
+  // const rect3 = new TestRect();
+  // rect3.origin.set(1600, 1600);
+  // rect3.size.set(300, 400);
+  // rect3.angle = 30;
+  // scene.add(rect3);
 
 });
