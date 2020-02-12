@@ -15,7 +15,6 @@ import { Rectangle } from "../src/shapes/rectangle.js";
 import { Ellipse } from "../src/shapes/ellipse";
 import { Rect } from "../src/types/rect";
 import { Object2D } from "../src/scene/object.js";
-import { DraggableObject } from "../src/shapes/draggable";
 import { Size } from "../src/types/size";
 import { Polygon } from "../src/types/polygon.js";
 
@@ -23,7 +22,7 @@ if (!Object.prototype._t_foreach) {
   Object.defineProperty(Object.prototype, "_t_foreach", {
     value: function(iterator) {
       if (this == null) {
-        throw Error("Not an object");
+        throw Error("Cannot iterate over null object");
       }
       const _this = this || window;
       for (const key in _this) {
@@ -37,7 +36,7 @@ if (!Object.prototype._t_foreach) {
   });
 }
 
-class TestRect extends DraggableObject {
+class TestRect extends Rectangle {
   constructor() {
     super();
 
@@ -67,34 +66,40 @@ class TestRect extends DraggableObject {
 }
 
 class DragToMoveBehavior {
-  constructor() {
-  }
-}
-
-class DragToSnapBehavior {
   constructor(obj) {
     this.obj = obj;
 
     this.obj.on("begindrag", e => {
-      this.obj.dragOffset = Vec2.sub(e.position, this.origin);
+      this.obj.dragOffset = Vec2.sub(e.position, this.obj.origin);
     });
 
     this.obj.on("drag", e => {
-      this.dragToSnap(e.position);
+      this.dragToMove(e.position);
     });
+  }
+
+  dragToMove(pos) {
+    const targetOrigin = Vec2.sub(pos, this.obj.dragOffset);
+    this.obj.origin.set(targetOrigin);
+  }
+}
+
+class DragToSnapBehavior extends DragToMoveBehavior {
+  constructor(obj) {
+    super(obj);
 
     this.obj.on("enddrag", _ => {
       DragToSnapBehavior.resetGuideLines();
     });
   }
 
-  dragToSnap(originPos) {
+  dragToMove(pos) {
     const obj = this.obj;
 
     DragToSnapBehavior.resetGuideLines();
     const guideLines = DragToSnapBehavior.guideLines;
     
-    const targetOrigin = Vec2.sub(originPos, this.obj.dragOffset);
+    const targetOrigin = Vec2.sub(pos, this.obj.dragOffset);
     const localTargetOrigin = obj.pointToLocal(targetOrigin);
 
     const hs = Size.toVector(obj.size).mul(0.5);
@@ -103,23 +108,6 @@ class DragToSnapBehavior {
     rectPolygon.transform(obj.transform);
 
     DragToSnapBehavior.findSnapObjects(obj, rectPolygon.points);
-
-    for (let i = 0; i < 9; i++) {
-      const parr = guideLines.points[i],
-        parrx = guideLines.x[i], parry = guideLines.y[i];
-
-      if (parr.length > 0) {
-        parr.sort((a, b) => a.dist - b.dist);
-      }
-        
-      if (parrx.length > 0) {
-        parrx.sort((a, b) => a.dist - b.dist);
-      }
-
-      if (parry.length > 0) {
-        parry.sort((a, b) => a.dist - b.dist);
-      }
-    }
 
     let xFixed = false, yFixed = false;
 
