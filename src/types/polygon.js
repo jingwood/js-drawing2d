@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Vec2, BoundingBox2D as BBox2D, MathFunctions } from "@jingwood/graphics-math";
+import { Vec2, BoundingBox2D as BBox2D } from "@jingwood/graphics-math";
 import { MathFunctions2 } from "@jingwood/graphics-math";
 
 export class Polygon {
