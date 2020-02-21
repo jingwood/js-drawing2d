@@ -58,13 +58,16 @@ export class Renderer2D {
 
     if (this.options.debugMode) {
       this.inputController.on("keydown", e => {
+        let processed = false;
+
         switch (e.lastKeyCode) {
           case Keys.B:
             this.options.debugOptions.showBBox = !this.options.debugOptions.showBBox;
+            processed = true;
             break;
         }
 
-        if (this.currentScene) {
+        if (processed && this.currentScene) {
           this.currentScene.requestUpdateFrame();
         }
       });

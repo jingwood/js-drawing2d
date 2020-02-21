@@ -76,6 +76,12 @@ class DragToMoveBehavior {
     this.obj.on("drag", e => {
       this.dragToMove(e.position);
     });
+
+    this.obj.on("enddrag", e => {
+      if (this.obj.scene) {
+        this.obj.scene.requestUpdateFrame();
+      }
+    });
   }
 
   dragToMove(pos) {

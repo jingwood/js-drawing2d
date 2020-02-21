@@ -117,12 +117,8 @@ export class Graphics2D {
 
 	}
 
-	drawRoundRect(rect, cornerSize, strokeWidth, strokeColor, fillColor) {
+	drawRoundRect(rect, cornerSize, strokeWidth = 1, strokeColor = "black", fillColor = "white") {
 		const ctx = this.ctx;
-		
-		strokeWidth = strokeWidth || this.strokeWidth || 1;
-		strokeColor = strokeColor || this.strokeColor || "black";
-		fillColor = fillColor || this.fillColor || "white";
 
 		const minEdge = Math.min(rect.width, rect.height);
 		if (cornerSize > minEdge) cornerSize = minEdge;
@@ -141,8 +137,8 @@ export class Graphics2D {
 		ctx.arc(x + hc, y + hc, hc, Math.PI, Math.PI / 2 + Math.PI);
 		ctx.closePath();
 
-		ctx.fillStyle = fillColor;
 		if (fillColor) {
+			ctx.fillStyle = fillColor;
 			ctx.fill();
 		}
 

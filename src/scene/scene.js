@@ -22,8 +22,6 @@ export class Scene2D {
   }
 
   onShow() {
-    // this.renderer.currentScene = this;
-    // this.requestUpdateFrame();
   }
 
   onHide() {
@@ -50,15 +48,16 @@ export class Scene2D {
   }
 
   add() {
-    for (var i = 0; i < arguments.length; i++) {
-      var arg = arguments[i];
+    for (let i = 0; i < arguments.length; i++) {
+      const arg = arguments[i];
+
       if (Array.isArray(arg)) {
-        for (var k = 0; k < arg.length; k++) {
+        for (let k = 0; k < arg.length; k++) {
           this.add(arg[k]);
         }
-      }
-      else {
+      } else {
         this.objects._t_pushIfNotExist(arg);
+        arg.scene = this;
       }
     }
     this.requestUpdateFrame();
@@ -170,7 +169,6 @@ export class Scene2D {
     
     if (this.dragObject) {
       this.dragObject.begindrag(evtArg);
-      this.requestUpdateFrame();
     }
     
     this.onbegindrag(evtArg);
@@ -180,8 +178,8 @@ export class Scene2D {
     const evtArg = this.createEventArgument(e, this.dragObject);
 
     if (this.dragObject) {
-      this.dragObject.drag(evtArg);
-      this.requestUpdateFrame();
+      const ret = this.dragObject.drag(evtArg);
+      if (ret) return;
     }
 
     this.ondrag(evtArg);
@@ -193,7 +191,6 @@ export class Scene2D {
     if (this.dragObject) {
       this.dragObject.enddrag(evtArg);
       this.dragObject = null;
-      this.requestUpdateFrame();
     }
     
     this.onenddrag(evtArg);

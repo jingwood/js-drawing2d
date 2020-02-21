@@ -42,6 +42,7 @@ export class Object2D {
     this.objects = [];
 
     this._parent = null;
+    this._scene = null;
     this.visible = true;
     this.zIndex = 0;
     this.style = new ObjectStyle();
@@ -56,6 +57,31 @@ export class Object2D {
     this._angle = 0;
     this._scale = new Vec2Property(this, 1, 1);
     this._transform = new Matrix3().loadIdentity();
+  }
+
+  get parent() {
+    return this._parent;
+  }
+
+  set parent(p) {
+    if (this._parent !== p) {
+      this._parent = p;
+      this.update();
+    }
+  }
+
+  get scene() {
+    return this._scene;
+  }
+
+  set scene(v) {
+    if (this._scene !== v) {
+      this._scene = v;
+
+      for (const child of this.objects) {
+        child.scene = v;
+      }
+    }
   }
 
   set origin(v) {
@@ -119,32 +145,23 @@ export class Object2D {
     return this._transform;
   }
 
-  get parent() {
-    return this._parent;
-  }
-
-  set parent(p) {
-    if (this._parent !== p) {
-      this._parent = p;
-      this.update();
-    }
-  }
-
   get worldOrigin() {
     return this._worldOrigin;
   }
 
   add() {
     for (let i = 0; i < arguments.length; i++) {
-      const arg = arguments[i];
-      if (Array.isArray(arg)) {
-        for (let k = 0; k < arg.length; k++) {
-          this.add(arg[k]);
+      const obj = arguments[i];
+      
+      if (Array.isArray(obj)) {
+        for (const child of obj) {
+          this.add(child);
         }
       }
       else {
-        this.objects._t_pushIfNotExist(arg);
-        arg.parent = this;
+        this.objects._t_pushIfNotExist(obj);
+        obj.parent = this;
+        obj.scene = this.scene;
       }
     }
   }
@@ -289,6 +306,10 @@ export class Object2D {
     this.updateBoundingBox();
     this.updateWorldBoundingBox();
     this.updateChildren();
+    
+    if (this._scene) {
+      this._scene.requestUpdateFrame();
+    }
   }
 
   updateTransform() {
