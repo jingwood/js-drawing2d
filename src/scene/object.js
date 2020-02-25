@@ -46,7 +46,10 @@ export class Object2D {
     this.visible = true;
     this.zIndex = 0;
     this.style = new ObjectStyle();
-    this.selected = false;
+    
+    this.isHover = false;
+    this.isActive = false;
+    this.isSelected = false;
 
     this.bbox = new BBox2D();
     this.wbbox = new BBox2D();
@@ -152,7 +155,7 @@ export class Object2D {
   add() {
     for (let i = 0; i < arguments.length; i++) {
       const obj = arguments[i];
-      
+
       if (Array.isArray(obj)) {
         for (const child of obj) {
           this.add(child);
