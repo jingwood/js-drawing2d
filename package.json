@@ -14,7 +14,7 @@
   "author": "Jingwood <jingwood@unvell.com>",
   "license": "MIT",
   "dependencies": {
-    "@jingwood/graphics-math": "^1.1.0",
+    "@jingwood/graphics-math": "^1.1.2",
     "@jingwood/input-control": "^1.0.3",
     "babel-core": "^6.26.3"
   },
