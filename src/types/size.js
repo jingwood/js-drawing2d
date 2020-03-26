@@ -43,6 +43,22 @@ export class Size {
     return new Size(this.width, this.height);
   }
 
+  add(s2) {
+    return Size.add(this, s2);
+  }
+
+  static add(s2) {
+    return new Size(this.width + s2.width, this.height + s2.height);
+  }
+
+  sub(s2) {
+    return Size.sub(this, s2);
+  }
+
+  static sub(s2) {
+    return new Size(this.width - s2.width, this.height - s2.height);
+  }
+
   mul(s) {
     return new Size(this.width * s, this.height * s);
   }
