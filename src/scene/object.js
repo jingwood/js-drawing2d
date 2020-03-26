@@ -290,14 +290,26 @@ export class Object2D {
   enddrag(e) {
     this.onenddrag(e);
   }
+
+  click(e) {
+    this.onclick(e);
+  }
   
   moveTo(p) {
     if (arguments.length === 1) {
-      this.bbox.origin = p;
+      this.origin.set(p);
       this.onmove();
     } else if (arguments.length === 2) {
-      this.bbox.origin = { x: arguments[0], y: arguments[1] };
+      this.origin.set(arguments[0], arguments[1]);
       this.onmove();
+    }
+  }
+
+  offset(arg0, arg1) {
+    if (arguments.length === 1) {
+      this.origin.set(this.origin.x + arg0.x, this.origin.y + arg0.y);
+    } else if (arguments.length === 2) {
+      this.origin.set(this.origin.x + arg0, this.origin.y + arg1);
     }
   }
 
@@ -337,6 +349,8 @@ export class Object2D {
   }
 
   update() {
+    if (this._suspendUpdate) return;
+    
     this.updateTransform();
     this.updateBoundingBox();
     this.updateWorldBoundingBox();
@@ -370,9 +384,12 @@ export class Object2D {
         this._transform = this._transform.mul(this.parent.transform);
         this._transform.notIdentity = true;
       // }
+ 
+      this._worldOrigin = this.origin.mulMat(this.parent.transform);
+
     }
     
-    this._worldOrigin = this.origin.mulMat(this._transform);
+    this._worldOrigin.set(this.origin);
   }
 
   updateChildren() {
