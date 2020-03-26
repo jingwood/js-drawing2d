@@ -17,6 +17,7 @@ import { Rect } from "../src/types/rect";
 import { Object2D } from "../src/scene/object.js";
 import { Size } from "../src/types/size";
 import { Polygon } from "../src/types/polygon.js";
+import { Polygon2D } from "../src/index.js";
 
 class TestRect extends Rectangle {
 }
@@ -49,10 +50,17 @@ window.addEventListener("load", e => {
   // rect2.angle = 30;
   scene.add(rect2);
 
-  // const rect3 = new TestRect();
-  // rect3.origin.set(1600, 1600);
-  // rect3.size.set(300, 400);
-  // rect3.angle = 30;
-  // scene.add(rect3);
+  const p1 = new Polygon2D([
+    new Vec2(-200, -200), new Vec2(200, -100),
+    new Vec2(200, 200), new Vec2(-200, 100),
+  ]);
+  p1.origin.set(2000, 1000);
+  p1.onmouseenter = e => p1.style.fillColor = '#00aaff';
+  p1.onmouseout = e => p1.style.fillColor = "yellow";
+  p1.angle = 45;
+  p1.isReceiveHover = true;
+  p1.onclick = e => p1.angle += 5;
+  p1.ondrag = e => p1.offset(e.movement);
+  scene.add(p1);
 
 });
