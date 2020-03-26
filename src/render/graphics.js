@@ -82,12 +82,8 @@ export class Graphics2D {
 	}
 
 	drawRect(rect, strokeWidth, strokeColor, fillColor) {
-		var ctx = this.ctx;
+		const ctx = this.ctx;
 	
-		strokeWidth = strokeWidth || this.strokeWidth || 1;
-		strokeColor = strokeColor || this.strokeColor || "black";
-		// fillColor = fillColor || this.fillColor;
-
 		// ctx.beginPath();
 
 		if (fillColor) {
@@ -95,22 +91,15 @@ export class Graphics2D {
 			ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
 		}
 		
-		if (typeof strokeWidth !== "undefined") {
-			ctx.lineWidth = strokeWidth;
-		} else {
-			ctx.lineWidth = this.strokeWidth;
-		}
+		if (!!strokeColor) {
+			ctx.strokeStyle = strokeColor;
 
-		if (strokeColor != undefined) {
-
-			if (typeof strokeColor !== "undefined") {
-				ctx.strokeStyle = strokeColor;
-			} else {
-				ctx.strokeStyle = this.strokeColor;
-			}
-
-			if (ctx.lineWidth > 0) {
-				ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+			if (!!strokeWidth) {
+				ctx.lineWidth = strokeWidth;
+		
+				if (ctx.lineWidth > 0) {
+					ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+				}
 			}
 		}
 		// ctx.closePath();
