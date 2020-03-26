@@ -40,6 +40,7 @@ window.addEventListener("load", e => {
   r11.origin.set(100, 0);
   r11.style.fillColor = "lightgreen";
   r11.angle = 30;
+  r11.isReceiveHover = true;
   rect1.add(r11);
 
   scene.add(rect1);
@@ -47,7 +48,6 @@ window.addEventListener("load", e => {
   const rect2 = new TestRect();
   rect2.origin.set(1000, 1000);
   rect2.size.set(400, 300);
-  // rect2.angle = 30;
   scene.add(rect2);
 
   const p1 = new Polygon2D([
