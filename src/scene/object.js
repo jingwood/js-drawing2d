@@ -47,9 +47,13 @@ export class Object2D {
     this.zIndex = 0;
     this.style = new ObjectStyle();
     
-    this.isHover = false;
+    this._isHover = false;
+    this.isReceiveHover = false;
     this.isActive = false;
     this.isSelected = false;
+    this.isEnabled = true;
+    
+    this._suspendUpdate = false;
 
     this.bbox = new BBox2D();
     this.wbbox = new BBox2D();
@@ -152,6 +156,21 @@ export class Object2D {
     return this._worldOrigin;
   }
 
+  get isHover() {
+    return this._isHover;
+  }
+  
+  set isHover(v) {
+    if (this._isHover !== v) {
+      this._isHover = v;
+      this.onhoverChange();
+      
+      if (this._scene) {
+        this._scene.requestUpdateFrame();
+      }
+    }
+  }
+
   add() {
     for (let i = 0; i < arguments.length; i++) {
       const obj = arguments[i];
@@ -216,6 +235,19 @@ export class Object2D {
 
   hitTestPoint(p) {
     return this.bbox.contains(this.pointToLocal(p));
+  }
+
+  findChildByPosition(p) {
+    let target = null;
+  
+    this.eachChildInv(child => {
+      if (child.visible && child.isEnabled && child.hitTestPoint(p)) {
+        target = child;
+        return false;
+      }
+    });
+  
+    return target;
   }
 
   pointToLocal(p) {
@@ -370,7 +402,8 @@ new EventDispatcher(Object2D).registerEvents(
 	"keyup", "keydown",
   "childAdd", "childRemove",
   "move", "rotate",
-  "draw");
+  "draw",
+  "hoverChange");
 
 class Vec2Property extends Vec2 {
   constructor(obj, x = 0, y = 0) {

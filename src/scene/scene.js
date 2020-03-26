@@ -16,7 +16,7 @@ export class Scene2D {
     this.requestedUpdateFrame = false;
 
     this.objects = [];
-    this.focusObject = null;
+
     this.dragObject = null;
     this.hoverObject = null;
   }
@@ -106,7 +106,7 @@ export class Scene2D {
     let target = null;
 
     this.eachObjectInv(obj => {
-      if (obj.visible && obj.hitTestPoint(p)) {
+      if (obj.visible && obj.isEnabled && obj.hitTestPoint(p)) {
         target = obj;
         return false;
       }
