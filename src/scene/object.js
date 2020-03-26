@@ -396,7 +396,7 @@ export class Object2D {
 // Event declarations
 new EventDispatcher(Object2D).registerEvents(
   "mousedown", "mouseup", "mousemove", "mouseenter", "mouseout",
-  "mousewheel",
+  "mousewheel", "click",
   "begindrag", "drag", "enddrag",
   "getFocus", "lostFocus",
 	"keyup", "keydown",

@@ -116,23 +116,30 @@ export class Scene2D {
   }
 
   mousedown(e) {
-    const pos = e.position;
-
-    const obj = this.findObjectByPosition(pos);
-    let isProcessed = false;
+    const obj = this.findObjectByPosition(e.position);
+    const eventArg = this.createEventArgument(e, obj);
     
     if (obj) {
       this.dragObject = obj;
-      isProcessed = obj.mousedown(this.createEventArgument(e, obj));
+      obj.mousedown(eventArg);
     }
 
-    if (!isProcessed) {
-      this.onmousedown(this.createEventArgument(e));
+    if (!eventArg.isProcessed) {
+      this.onmousedown(eventArg);
     }
   }
 
   mouseup(e) {
-    this.onmouseup(this.createEventArgument(e));
+    const eventArg = this.createEventArgument(e, this.dragObject);
+
+    if (this.dragObject) {
+      this.dragObject.click(eventArg);
+      this.dragObject = null;
+    }
+
+    if (!eventArg.isProcessed) {
+      this.onmouseup(eventArg);
+    }
   }
 
   mousemove(e) {
@@ -145,12 +152,20 @@ export class Scene2D {
 
     if (this.hoverObject !== obj) {
       if (this.hoverObject) {
+        if (this.hoverObject.isReceiveHover) {
+          this.hoverObject.isHover = false;
+        }
+
         this.hoverObject.mouseout(this.createEventArgument(e, this.hoverObject));
       }
 
       this.hoverObject = obj;
 
       if (this.hoverObject) {
+        if (this.hoverObject.isReceiveHover) {
+          this.hoverObject.isHover = true;
+        }
+
         obj.mouseenter(this.createEventArgument(e, this.hoverObject));
       }
     }
@@ -175,14 +190,15 @@ export class Scene2D {
   }
 
   drag(e) {
-    const evtArg = this.createEventArgument(e, this.dragObject);
+    const arg = this.createEventArgument(e, this.dragObject);
 
     if (this.dragObject) {
-      const ret = this.dragObject.drag(evtArg);
-      if (ret) return;
+     this.dragObject.drag(arg);
     }
 
-    this.ondrag(evtArg);
+    if (!arg.isProcessed) {
+      this.ondrag(arg);
+    }
   }
 
   enddrag(e) {
@@ -204,7 +220,9 @@ export class Scene2D {
     this.onkeyup(e);
   }
 
-  createEventArgument(arg, obj) {      
+  createEventArgument(arg, obj) {
+    arg.isProcessed = false;
+
     if (obj) {
       arg.localPosition = obj.pointToLocal(arg.position);
     }
