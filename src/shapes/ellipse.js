@@ -13,7 +13,7 @@ export class Ellipse extends Rectangle {
     super();
   }
 
-  draw(g) {
+  drawSelf(g) {
     g.drawEllipse(this.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
     this.ondraw(g);
   }

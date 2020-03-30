@@ -16,7 +16,7 @@ export class Line extends Object2D {
     this.line = new LineSegment(start, end);
   }
 
-  draw(g) {
+  drawSelf(g) {
     g.drawLine(this.line.start, this.line.end,
       this.style.strokeWidth, this.style.strokeColor);
   }

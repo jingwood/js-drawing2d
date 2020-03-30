@@ -19,8 +19,7 @@ export class Polygon2D extends Object2D {
     return this.polygon.containsPoint(this.pointToLocal(p));
   }
 
-  draw(g) {
+  drawSelf(g) {
     g.drawPolygon(this.polygon.points, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
-    this.ondraw(g);
   }
 };

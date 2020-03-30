@@ -43,6 +43,8 @@ window.addEventListener("load", e => {
   r11.isReceiveHover = true;
   rect1.add(r11);
 
+  rect1.cacheDraw(renderer);
+
   scene.add(rect1);
 
   const rect2 = new TestRect();

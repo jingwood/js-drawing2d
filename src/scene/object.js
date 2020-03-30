@@ -12,6 +12,7 @@ import { ObjectStyle } from "./style";
 import { EventArgument } from "./eventarg";
 import { Size } from "../types/size";
 import { Renderer2D } from "../render/renderer";
+import { Graphics2D } from "../render/graphics";
 
 // TODO: remove polyfill
 if (typeof BBox2D.transform !== "function") {
@@ -64,6 +65,8 @@ export class Object2D {
     this._angle = 0;
     this._scale = new Vec2Property(this, 1, 1);
     this._transform = new Matrix3().loadIdentity();
+    
+    this.cachePadding = 10;
   }
 
   get parent() {
@@ -323,17 +326,14 @@ export class Object2D {
     }
   
     g.setTransform(this._transform);
-      
-    this.draw(g);
-
-    for (let k = 0; k < this.objects.length; k++) {
-      const child = this.objects[k];
-      if (child && child.visible) {
-        child.render(g);
-      }
+    
+    if (this.cacheCanvas) {
+      g.drawImage(this.cacheCanvas, -this.width * 0.5 - this.cachePadding * 0.5,
+        -this.height * 0.5 - this.cachePadding * 0.5,
+        this.width + this.cachePadding, this.height + this.cachePadding);
+    } else {
+      this.draw(g);
     }
-
-    this.drawAfterChildren(g);
 
     if (g.options.debugMode && g.options.debugOptions.showBBox) {
       g.resetTransform();
@@ -342,10 +342,61 @@ export class Object2D {
   }
 
   draw(g) {
+    this.drawSelf(g);
     this.ondraw(g);
+    this.drawChildren(g);
+    this.drawAfterChildren(g);
+  }
+
+  drawSelf(g) {
+  }
+
+  drawChildren(g) {
+    for (const child of this.objects) {
+      if (child && child.visible) {
+        child.render(g);
+      }
+    }
   }
 
   drawAfterChildren(g) {
+  }
+
+  cacheDraw(renderer) {
+    this.renderer = renderer;
+
+    if (!this.cacheCanvas) {
+      this.cacheCanvas = document.createElement("canvas");
+      this.cache2DContext = null;
+      this.cache2DGraphics = null;
+    }
+
+    this.cacheCanvas.width = this.width + this.cachePadding;
+    this.cacheCanvas.height = this.height + this.cachePadding;
+
+    if (!this.cache2DContext) {
+      this.cache2DContext = this.cacheCanvas.getContext("2d");
+    }
+    this.cache2DContext.clearRect(0, 0, this.cacheCanvas.width, this.cacheCanvas.height);
+
+    if (!this.cache2DGraphics) {
+      this.cache2DGraphics = new Graphics2D(this.cacheCanvas, this.cache2DContext);
+    }
+
+    let transform = new Matrix3().loadIdentity();
+    transform.translate(this.width * 0.5 + this.cachePadding * 0.5,
+      this.height * 0.5 + this.cachePadding * 0.5);
+
+    if (this.parent) {
+      transform = transform.mul(this.parent.transform);
+    }
+
+    this.cacheTransform = transform;
+    this.updateChildren();
+
+    this.cache2DGraphics.pushTransform(transform);
+ 
+    this.draw(this.cache2DGraphics);
   }
 
   update() {
@@ -378,18 +429,19 @@ export class Object2D {
     }
 
     if (this.parent) {
-      // if (!this.notIdentity) {
-      //   this._transform.copyFrom(this.parent.transform);
-      // } else {
-        this._transform = this._transform.mul(this.parent.transform);
-        this._transform.notIdentity = true;
-      // }
- 
-      this._worldOrigin = this.origin.mulMat(this.parent.transform);
+      this._transform.notIdentity = true;
 
+      if (this.parent.cacheCanvas) {
+        this._transform = this._transform.mul(this.parent.cacheTransform);
+        this._worldOrigin.set(this.origin.mulMat(this.parent.cacheTransform));
+      } else {
+        this._transform = this._transform.mul(this.parent.transform);
+        this._worldOrigin.set(this.origin.mulMat(this.parent.transform));
+      }
+ 
+    } else {
+      this._worldOrigin.set(this.origin);
     }
-    
-    this._worldOrigin.set(this.origin);
   }
 
   updateChildren() {
@@ -407,7 +459,6 @@ export class Object2D {
   updateWorldBoundingBox() {
     this.wbbox = this.bbox.transform(this.transform);
   }
-
 }
 
 // Event declarations

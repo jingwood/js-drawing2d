@@ -15,7 +15,7 @@ export class Image extends Rectangle {
     this.img = img;
   }
 
-  draw(g) {
-    g.drawImage(this.rect, this.img);
+  drawSelf(g) {
+    g.drawImage(this.img, this.rect.x, this.rect.y, this.rect.width, this.rect.height);
   }
 }

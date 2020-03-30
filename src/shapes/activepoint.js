@@ -18,7 +18,7 @@ export class ActivePoint extends Rectangle {
     this.style.fillColor = "rgba(150,150,255,0.3)";
   }
 
-  draw(g) {
+  drawSelf(g) {
     g.drawEllipse(this.bbox, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
   }
 
