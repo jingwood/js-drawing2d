@@ -91,7 +91,7 @@ export class Renderer2D {
 		size.height = rect.height * dpr;
   
     this.canvas.width = size.width;
-    this.canvas.height = size.height ;
+    this.canvas.height = size.height;
   }
 
   clear() {

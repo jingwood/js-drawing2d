@@ -34,7 +34,8 @@ window.addEventListener("load", e => {
 
   const rect1 = new TestRect();
   rect1.origin.set(500, 300);
-  rect1.size.set(400, 300);
+  rect1.size.set(400, 400);
+  // rect1.angle = 45;
 
   const r11 = new TestRect();
   r11.origin.set(100, 0);

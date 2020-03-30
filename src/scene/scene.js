@@ -28,8 +28,7 @@ export class Scene2D {
   }
 
   render(g) {
-    for (var i = 0; i < this.objects.length; i++) {
-      var obj = this.objects[i];
+    for (const obj of this.objects) {
       if (obj && obj.visible) {
         obj.render(g);
       }
