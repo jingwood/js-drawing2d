@@ -17,7 +17,7 @@ const renderer = new Renderer2D({
 const scene = new Scene2D();
 
 // create a rectangle object
-const rect1 = new Rectangle();
+const rect1 = new Rectangle2D();
 rect1.origin.set(500, 300);
 rect1.size.set(400, 300);
 
@@ -40,9 +40,10 @@ renderer.show(scene);
 # Built-in geometry objects
 
 - Line Segment
-- Rectangle
-- Ellipse
-- Polygon
+- Rectangle2D
+- Ellipse2D
+- Polygon2D
+- Image2D
 
 # License
 
