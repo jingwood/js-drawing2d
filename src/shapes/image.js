@@ -6,10 +6,10 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Rectangle } from "./rectangle.js";
+import { Rectangle2D } from "./rectangle.js";
 
-export class Image extends Rectangle {
-  constructor(img, x, y, w, h) {
+export class Image2D extends Rectangle2D {
+  constructor(img) {
     super();
 
     this.img = img;

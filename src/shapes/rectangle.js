@@ -9,7 +9,7 @@
 import { Object2D } from "../scene/object.js";
 import { Rect } from "../types/rect.js";
 
-export class Rectangle extends Object2D {
+export class Rectangle2D extends Object2D {
   constructor() {
     super();
     this.rect = new Rect();

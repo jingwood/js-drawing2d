@@ -6,10 +6,10 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Rectangle } from "./rectangle.js";
+import { Rectangle2D } from "./rectangle.js";
 import { Rect } from "../types/rect.js";
 
-export class ActivePoint extends Rectangle {
+export class ActivePoint extends Rectangle2D {
   constructor(x, y) {
     super(new Rect(x - 6, y - 6, 12, 12));
 
