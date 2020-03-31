@@ -66,6 +66,8 @@ export class Object2D {
     this._scale = new Vec2Property(this, 1, 1);
     this._transform = new Matrix3().loadIdentity();
     
+    this.enableCache = false;
+    this.cacheDirty = true;
     this.cachePadding = 10;
   }
 
@@ -327,10 +329,17 @@ export class Object2D {
   
     g.setTransform(this._transform);
     
-    if (this.cacheCanvas) {
-      g.drawImage(this.cacheCanvas, -this.width * 0.5 - this.cachePadding * 0.5,
-        -this.height * 0.5 - this.cachePadding * 0.5,
-        this.width + this.cachePadding, this.height + this.cachePadding);
+    if (this.enableCache) {
+      if (this.cacheDirty) {
+        this.cacheDraw();
+        this.cacheDirty = false;
+      }
+
+      if (this.cacheCanvas) {
+        g.drawImage(this.cacheCanvas, -this.width * 0.5 - this.cachePadding * 0.5,
+          -this.height * 0.5 - this.cachePadding * 0.5,
+          this.width + this.cachePadding, this.height + this.cachePadding);
+      }
     } else {
       this.draw(g);
     }
@@ -362,9 +371,7 @@ export class Object2D {
   drawAfterChildren(g) {
   }
 
-  cacheDraw(renderer) {
-    this.renderer = renderer;
-
+  cacheDraw() {
     if (!this.cacheCanvas) {
       this.cacheCanvas = document.createElement("canvas");
       this.cache2DContext = null;
@@ -391,10 +398,10 @@ export class Object2D {
       transform = transform.mul(this.parent.transform);
     }
 
-    this.cacheTransform = transform;
+    this._cacheTransform = transform;
     this.updateChildren();
 
-    this.cache2DGraphics.pushTransform(transform);
+    this.cache2DGraphics.setTransform(transform);
  
     this.draw(this.cache2DGraphics);
   }
@@ -432,8 +439,8 @@ export class Object2D {
       this._transform.notIdentity = true;
 
       if (this.parent.cacheCanvas) {
-        this._transform = this._transform.mul(this.parent.cacheTransform);
-        this._worldOrigin.set(this.origin.mulMat(this.parent.cacheTransform));
+        this._transform = this._transform.mul(this.parent._cacheTransform);
+        this._worldOrigin.set(this.origin.mulMat(this.parent._cacheTransform));
       } else {
         this._transform = this._transform.mul(this.parent.transform);
         this._worldOrigin.set(this.origin.mulMat(this.parent.transform));

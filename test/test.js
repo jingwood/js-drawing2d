@@ -20,6 +20,12 @@ import { Polygon } from "../src/types/polygon.js";
 import { Polygon2D } from "../src/index.js";
 
 class TestRect extends Rectangle2D {
+  drawSelf(g) {
+    super.drawSelf(g);
+
+    g.drawText(this.worldOrigin.x + "," + this.worldOrigin.y, { x: 0, y: 0 },
+      "black", "center");
+  }
 }
 
 window.addEventListener("load", e => {
@@ -44,7 +50,7 @@ window.addEventListener("load", e => {
   r11.isReceiveHover = true;
   rect1.add(r11);
 
-  rect1.cacheDraw(renderer);
+  rect1.enableCache = true;
 
   scene.add(rect1);
 
