@@ -222,10 +222,9 @@ export class Graphics2D {
 		const ctx = this.ctx;
 	
 		ctx.fillStyle = color || "black";		
-		ctx.font = font || "16px Arial";
+		ctx.font = font || "1.5em Arial";
+	
 		let { x, y } = p;
-
-		if (font) ctx.font = font;
 
 		if (halign === "center") {
 			ctx.textAlign = "center";
