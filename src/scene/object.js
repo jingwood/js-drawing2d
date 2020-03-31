@@ -466,6 +466,31 @@ export class Object2D {
   updateWorldBoundingBox() {
     this.wbbox = this.bbox.transform(this.transform);
   }
+
+  clone() {
+    const prototypeType = Object.getPrototypeOf(this);
+    const newObj = Object.create(prototypeType);
+
+    if (prototypeType) {
+      prototypeType.constructor.call(newObj);
+    }
+
+    newObj.origin.set(this.origin);
+    newObj.size.set(this.size);
+    newObj.angle = this.angle;
+
+    if (this.style) {
+      newObj.style = {};
+      Object.assign(newObj.style, this.style);
+    }
+
+    for (const child of this.objects) {
+      const newChild = child.clone();
+      newObj.add(newChild);
+    }
+
+    return newObj;
+  }
 }
 
 // Event declarations
@@ -476,8 +501,9 @@ new EventDispatcher(Object2D).registerEvents(
   "getFocus", "lostFocus",
 	"keyup", "keydown",
   "childAdd", "childRemove",
-  "move", "rotate",
+  "moved", "rotated",
   "draw",
+  "sizeChanged",
   "hoverChange");
 
 class Vec2Property extends Vec2 {
@@ -550,6 +576,7 @@ class SizeProperty extends Size {
   notify() {
     if (this.obj) {
       this.obj.update();
+      this.obj.onsizeChanged();
     }
   }
 

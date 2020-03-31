@@ -50,9 +50,14 @@ window.addEventListener("load", e => {
   r11.isReceiveHover = true;
   rect1.add(r11);
 
-  rect1.enableCache = true;
+  // rect1.enableCache = true;
 
   scene.add(rect1);
+
+  const rect1clone = rect1.clone();
+  rect1clone.origin.y = 800;
+  rect1clone.enableCache = true;
+  scene.add(rect1clone);
 
   const rect2 = new TestRect();
   rect2.origin.set(1000, 1000);
@@ -66,10 +71,11 @@ window.addEventListener("load", e => {
   p1.origin.set(2000, 1000);
   p1.onmouseenter = e => p1.style.fillColor = '#00aaff';
   p1.onmouseout = e => p1.style.fillColor = "yellow";
-  p1.angle = 45;
+  p1.angle = 30;
   p1.isReceiveHover = true;
   p1.onclick = e => p1.angle += 5;
   p1.ondrag = e => p1.offset(e.movement);
+  p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + ","
+    + Math.round(p1.worldOrigin.y), { x: 0, y: 0 }, "black", "center");
   scene.add(p1);
-
 });
