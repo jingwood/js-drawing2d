@@ -13,6 +13,8 @@ export class Polygon2D extends Object2D {
   constructor(points) {
     super();
     this.polygon = new Polygon(points);
+    const pbox = this.polygon.bbox;
+    this.size.set(pbox.width, pbox.height);
   }
 
   hitTestPoint(p) {
