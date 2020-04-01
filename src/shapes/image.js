@@ -12,10 +12,23 @@ export class Image2D extends Rectangle2D {
   constructor(img) {
     super();
 
-    this.img = img;
+    this._image = null;
+
+    if (img) {
+      this.image = img; 
+    }
+  }
+
+  get image() {
+    return this._image;
+  }
+
+  set image(img) {
+    this._image = img;
+    this.size.set(img.width, img.height);
   }
 
   drawSelf(g) {
-    g.drawImage(this.img, this.rect.x, this.rect.y, this.rect.width, this.rect.height);
+    g.drawImage(this._image, this.rect.x, this.rect.y, this.rect.width, this.rect.height);
   }
 }

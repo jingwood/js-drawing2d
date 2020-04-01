@@ -50,6 +50,9 @@ window.addEventListener("load", e => {
   r11.isReceiveHover = true;
   rect1.add(r11);
 
+  rect1.transparency = 0.5;
+  r11.transparency = 1;
+
   // rect1.enableCache = true;
 
   scene.add(rect1);

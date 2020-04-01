@@ -13,6 +13,7 @@ import { EventArgument } from "./eventarg";
 import { Size } from "../types/size";
 import { Renderer2D } from "../render/renderer";
 import { Graphics2D } from "../render/graphics";
+import { MathFunctions } from "@jingwood/graphics-math/";
 
 // TODO: remove polyfill
 if (typeof BBox2D.transform !== "function") {
@@ -47,6 +48,7 @@ export class Object2D {
     this.visible = true;
     this.zIndex = 0;
     this.style = new ObjectStyle();
+    this._transparency = 1;
     
     this._isHover = false;
     this.isReceiveHover = false;
@@ -69,6 +71,10 @@ export class Object2D {
     this.enableCache = false;
     this.cacheDirty = true;
     this.cachePadding = 10;
+
+    this._renderArgs = {
+      transparency: 1
+    };
   }
 
   get parent() {
@@ -173,6 +179,28 @@ export class Object2D {
       if (this._scene) {
         this._scene.requestUpdateFrame();
       }
+    }
+  }
+
+  get transparency() {
+    return this._transparency;
+  }
+
+  set transparency(v) {
+    this._transparency = v;
+
+    this._updateRenderArgs();
+
+    for (const child of this.objects) {
+      child._updateRenderArgs();
+    }
+  }
+
+  _updateRenderArgs() {
+    if (this.parent) {
+      this._renderArgs.transparency = MathFunctions.clamp(Math.min(this._transparency, this.parent.transparency));
+    } else {
+      this._renderArgs.transparency = MathFunctions.clamp(this._transparency);
     }
   }
 
@@ -325,6 +353,12 @@ export class Object2D {
       if (style.strokeWidth) g.strokeWidth = style.strokeWidth;
       if (style.strokeColor) g.strokeColor = style.strokeColor;
       if (style.fillColor) g.fillColor = style.fillColor;
+    }
+
+    if (this._renderArgs.transparency < 1) {
+      g.ctx.globalAlpha = this._renderArgs.transparency;
+    } else {
+      g.ctx.globalAlpha = 1;
     }
   
     g.setTransform(this._transform);
