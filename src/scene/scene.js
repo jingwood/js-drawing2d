@@ -171,10 +171,16 @@ export class Scene2D {
     this.onmousemove(this.createEventArgument(e));
   }
 
-  mouseenter() {
+  mouseenter(e) {
+    this.onmouseenter(e);
   }
 
-  mouseout() {
+  mouseout(e) {
+    this.onmouseout(e);
+  }
+
+  mousewheel(e) {
+    this.onmousewheel(e);
   }
 
   begindrag(e) {
@@ -219,11 +225,10 @@ export class Scene2D {
   }
 
   createEventArgument(arg, obj) {
-    arg.isProcessed = false;
 
-    if (obj) {
-      arg.localPosition = obj.pointToLocal(arg.position);
-    }
+    // if (obj) {
+    //   arg.localPosition = obj.pointToLocal(arg.position);
+    // }
 
     return arg;
   }
@@ -231,7 +236,7 @@ export class Scene2D {
 
 // Event declarations
 new EventDispatcher(Scene2D).registerEvents(
-	"mousedown", "mouseup", "mousemove", "mousewheel",
+	"mousedown", "mouseup", "mousemove", "mouseenter", "mouseout", "mousewheel", 
   "begindrag", "drag", "enddrag",
   "getFocus", "lostFocus",
 	"keyup", "keydown",

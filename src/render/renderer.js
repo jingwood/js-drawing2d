@@ -18,6 +18,7 @@ const rendererDefaultOptions = {
   debugOptions: {
     showBBox: false,
   },
+  autoResize: true,
 };
 
 export class Renderer2D {
@@ -35,6 +36,24 @@ export class Renderer2D {
       }
     }
 
+    const _this = this;
+
+    function canvasResizeCheck() {
+      if (_this.options.autoResize) {
+        const dpr = _this.options.renderPixelRatio;
+        const bounds = _this.canvas.getBoundingClientRect();
+        if (bounds.width * dpr !== _this.renderSize.width
+          || bounds.height * dpr !== _this.renderSize.height) {
+          console.log("canvas resized");
+          _this.resetViewport();
+          if (_this.currentScene) {
+            _this.currentScene.requestUpdateFrame();
+          }
+        }
+      }
+    }
+    setInterval(canvasResizeCheck, 500);
+
     this.ctx = this.canvas.getContext("2d");
 
     if (!this.ctx) {
@@ -50,11 +69,12 @@ export class Renderer2D {
     this.inputController.onmousemove = e => { if (this.currentScene) { this.currentScene.mousemove(this.transformEventArgument(e)); } }
     this.inputController.onmouseenter = e => { if (this.currentScene) this.currentScene.mouseenter(this.transformEventArgument(e)); }
     this.inputController.onmouseout = e => { if (this.currentScene) this.currentScene.mouseout(this.transformEventArgument(e)); }
+    this.inputController.onmousewheel = e => { if (this.currentScene) this.currentScene.mousewheel(this.transformEventArgument(e)); }
     this.inputController.onbegindrag = e => { if (this.currentScene) this.currentScene.begindrag(this.transformEventArgument(e)); }
     this.inputController.ondrag = e => { if (this.currentScene) this.currentScene.drag(this.transformEventArgument(e)); }
     this.inputController.onenddrag = e => { if (this.currentScene) this.currentScene.enddrag(this.transformEventArgument(e)); }
-    this.inputController.onkeydown = e => { if (this.currentScene) this.currentScene.keydown(this.transformEventArgument(e)); }
-    this.inputController.onkeyup = e => { if (this.currentScene) this.currentScene.keyup(this.transformEventArgument(e)); }
+    this.inputController.onkeydown = e => { if (this.currentScene) this.currentScene.keydown((e)); }
+    this.inputController.onkeyup = e => { if (this.currentScene) this.currentScene.keyup((e)); }
 
     if (this.options.debugMode) {
       this.inputController.on("keydown", e => {
@@ -87,11 +107,11 @@ export class Renderer2D {
 
     this.aspectRate = rect.width / rect.height;
 
-		size.width = rect.width * dpr;
-		size.height = rect.height * dpr;
-  
-    this.canvas.width = size.width;
-    this.canvas.height = size.height;
+		size.width = this.canvas.width = rect.width * dpr;
+		size.height = this.canvas.height = rect.height * dpr;
+ 
+		this.canvas.width = size.width;
+		this.canvas.height = size.height;
   }
 
   clear() {

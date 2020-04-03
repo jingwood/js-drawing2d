@@ -81,9 +81,9 @@ window.addEventListener("load", e => {
 
   const rect1clone = rect1.clone();
   rect1clone.origin.set(500, 800);
-  rect1clone.enableCache = true;
   rect1clone.scaleOrigin.set(-200, 0);
   rect1clone.scale.set(0.5, 0.5);
   rect1clone.transparency = 0.8;
+  rect1clone.enableCache = true;
   scene.add(rect1clone);
 });
