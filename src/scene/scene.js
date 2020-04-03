@@ -82,8 +82,7 @@ export class Scene2D {
     for (let i = this.objects.length - 1; i >= 0; i--) {
       const obj = this.objects[i];
 
-      if (!options || typeof options.filter !== "function"
-        || !options.filter(obj)) {
+      if (!options || typeof options.filter !== "function" || options.filter(obj)) {
         if (obj.eachChildInv(handler, options) === false) return false;
         if (handler(obj) === false) return false;
       }
@@ -105,11 +104,11 @@ export class Scene2D {
     let target = null;
 
     this.eachObjectInv(obj => {
-      if (obj.visible && obj.isEnabled && obj.hitTestPoint(p)) {
+      if (obj.hitTestPoint(p)) {
         target = obj;
         return false;
       }
-    });
+    }, { filter: obj => obj.visible && obj.isEnabled && obj._renderArgs.transparency > 0 });
 
     return target;
   }

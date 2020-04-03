@@ -57,11 +57,6 @@ window.addEventListener("load", e => {
 
   scene.add(rect1);
 
-  const rect1clone = rect1.clone();
-  rect1clone.origin.y = 800;
-  rect1clone.enableCache = true;
-  scene.add(rect1clone);
-
   const rect2 = new TestRect();
   rect2.origin.set(1000, 1000);
   rect2.size.set(400, 300);
@@ -81,4 +76,14 @@ window.addEventListener("load", e => {
   p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + ","
     + Math.round(p1.worldOrigin.y), { x: 0, y: 0 }, "black", "center");
   scene.add(p1);
+
+
+
+  const rect1clone = rect1.clone();
+  rect1clone.origin.set(500, 800);
+  rect1clone.enableCache = true;
+  rect1clone.scaleOrigin.set(-200, 0);
+  rect1clone.scale.set(0.5, 0.5);
+  rect1clone.transparency = 0.8;
+  scene.add(rect1clone);
 });

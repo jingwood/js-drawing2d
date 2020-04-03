@@ -55,12 +55,8 @@ export class Size {
     return Size.sub(this, s2);
   }
 
-  static sub(s2) {
-    return new Size(this.width - s2.width, this.height - s2.height);
-  }
-
-  mul(s) {
-    return new Size(this.width * s, this.height * s);
+  static sub(s1, s2) {
+    return new Size(s1.width - s2.width, s1.height - s2.height);
   }
 
   mul(scalar) {
@@ -72,6 +68,18 @@ export class Size {
       return new Size(size.width * scalar.width, size.height * scalar.height);
     } else if (!isNaN(scalar)) {
       return new Size(size.width * scalar, size.height * scalar);
+    }
+  }
+
+  div(scalar) {
+    return Size.div(this, scalar);
+  }
+
+  static div(size, scalar) {
+    if (typeof scalar === "object") {
+      return new Size(size.width / scalar.width, size.height / scalar.height);
+    } else if (!isNaN(scalar)) {
+      return new Size(size.width / scalar, size.height / scalar);
     }
   }
 

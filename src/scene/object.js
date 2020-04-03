@@ -60,12 +60,15 @@ export class Object2D {
 
     this.bbox = new BBox2D();
     this.wbbox = new BBox2D();
-    this._origin = new Vec2Property(this);
+    this._origin = new Vec2Property(this, 0, 0, _ => this.onoriginChanged());
     this._size = new SizeProperty(this, 100, 100);
     this._worldOrigin = new Vec2();
+    this.minSize = new Size(20, 20);
 
     this._angle = 0;
-    this._scale = new Vec2Property(this, 1, 1);
+    this._scale = new Vec2Property(this, 1, 1, _ => this.onscaleChanged());
+    this.rotateOrigin = new Vec2();
+    this.scaleOrigin = new Vec2();
     this._transform = new Matrix3().loadIdentity();
     
     this.enableCache = false;
@@ -174,7 +177,7 @@ export class Object2D {
   set isHover(v) {
     if (this._isHover !== v) {
       this._isHover = v;
-      this.onhoverChange();
+      this.onhoverChanged();
       
       if (this._scene) {
         this._scene.requestUpdateFrame();
@@ -252,15 +255,8 @@ export class Object2D {
     for (let i = this.objects.length - 1; i >= 0; i--) {
       const child = this.objects[i];
 
-      if (!options || typeof options.filter !== "function"
-        || !options.filter(obj)) {
-               
-        if (!options
-          || typeof options.childrenFilter !== "function"
-          || !options.childrenFilter(this)) {
-            if (child.eachChildInv(handler, options) === false) return false;
-        }
-
+      if (!options || typeof options.filter !== "function" || options.filter(child)) {
+        if (child.eachChildInv(handler, options) === false) return false;
         if (handler(child) === false) return false;
       }
     }
@@ -378,6 +374,8 @@ export class Object2D {
       this.draw(g);
     }
 
+    g.ctx.globalAlpha = 1;
+
     if (g.options.debugMode && g.options.debugOptions.showBBox) {
       g.resetTransform();
       g.drawRect(this.wbbox.rect, 1, "red");
@@ -464,8 +462,19 @@ export class Object2D {
       || this.angle !== 0
       || this.scale.x !== 1 || this.scale.y !== 1) {
       t.translate(this.origin.x, this.origin.y);
+
       t.rotate(this.angle);
+
+      if (this.scaleOrigin.x !== 0 || this.scaleOrigin.y !== 0) {
+        t.translate(this.scaleOrigin.x , this.scaleOrigin.y );
+      }
+
       t.scale(this.scale.x, this.scale.y);
+
+      if (this.scaleOrigin.x !== 0 || this.scaleOrigin.y !== 0) {
+        t.translate(-this.scaleOrigin.x , -this.scaleOrigin.y );
+      }
+
       t.notIdentity = true;
     }
 
@@ -532,26 +541,30 @@ new EventDispatcher(Object2D).registerEvents(
   "mousedown", "mouseup", "mousemove", "mouseenter", "mouseout",
   "mousewheel", "click",
   "begindrag", "drag", "enddrag",
-  "getFocus", "lostFocus",
-	"keyup", "keydown",
-  "childAdd", "childRemove",
-  "moved", "rotated",
+  "keyup", "keydown",
   "draw",
-  "sizeChanged",
-  "hoverChange");
+  "originChanged", "sizeChanged", "scaleChanged",
+  "hoverChanged",
+
+  // "childAdd", "childRemove",
+  // "getFocus", "lostFocus",
+  // "moved", "rotated",
+);
 
 class Vec2Property extends Vec2 {
-  constructor(obj, x = 0, y = 0) {
+  constructor(obj, x = 0, y = 0, changeCallback) {
     super();
     this.obj = obj;
 
     this._x = x;
     this._y = y;
+    this.changeCallback = changeCallback;
   }
 
   notify() {
     if (this.obj) {
       this.obj.update();
+      this.changeCallback();
     }
   }
 
@@ -624,6 +637,10 @@ class SizeProperty extends Size {
   }
 
   set width(v) {
+    if (this.obj) {
+      if (v < this.obj.minSize.width) v = this.obj.minSize.width;
+    }
+
     if (this._width !== v) {
       this._width = v;
       this.notify();
@@ -635,6 +652,10 @@ class SizeProperty extends Size {
   }
 
   set height(v) {
+    if (this.obj) {
+      if (v < this.obj.minSize.height) v = this.obj.minSize.height;
+    }
+    
     if (this._height !== v) {
       this._height = v;
       this.notify();
