@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Matrix3 } from "@jingwood/graphics-math";
+import { Vec2, Matrix3 } from "@jingwood/graphics-math";
 import { Rect } from "../types/rect.js";
 
 const defaultOptions = {
@@ -138,8 +138,8 @@ export class Graphics2D {
 		}
 	}
 
-	drawPoint(p, size = 3, strikeColor, fillColor) {
-		this.drawEllipse(new Rect(p.x - size / 2, p.y - size / 2, size, size), 0, strikeColor, fillColor);
+	drawPoint(p, size = 3, strikeWidth, strikeColor, fillColor) {
+		this.drawEllipse(new Rect(p.x - size / 2, p.y - size / 2, size, size), strikeWidth, strikeColor, fillColor);
 	}
 
 	// drawEllipse(p, size, strokeWidth, strokeColor, fillColor) {
@@ -178,7 +178,7 @@ export class Graphics2D {
 	
 		if (strokeWidth || strokeColor) {
 			ctx.lineWidth = strokeWidth;
-			ctx.strokeStyle = strokeColor || "black";
+			ctx.strokeStyle = strokeColor;
 			ctx.stroke();
 		}
 	}
@@ -231,6 +231,10 @@ export class Graphics2D {
 			ctx.textBaseline = "middle";
 		}
 
+    if (typeof text !== "string") {
+      text = new String(text);
+    }
+
 		const lines = text.split('\n');
 
 		// TODO: decide line height
@@ -245,11 +249,8 @@ export class Graphics2D {
 		}
 	}
   		
-	drawLine(from, to, strokeWidth, strokeColor) {
+	drawLine(from, to, strokeWidth = 1, strokeColor = "black") {
 		const ctx = this.ctx;
-
-		ctx.lineWidth = strokeWidth || this.strokeWidth || 1;
-		ctx.strokeStyle = strokeColor || this.strokeColor || "black";
 
 		ctx.beginPath();
 
@@ -262,7 +263,10 @@ export class Graphics2D {
 		}
 
 		ctx.closePath();
-		ctx.stroke();
+
+		ctx.lineWidth = strokeWidth;
+		ctx.strokeStyle = strokeColor;
+    ctx.stroke();
 	}
 		
 	drawLineSegments() {
@@ -318,50 +322,32 @@ export class Graphics2D {
 		}
 	}
 		
-	drawArrow(from, to, width, color, arrowSize) {
-		var ctx = this.ctx;
-		
-		if (width === undefined) width = 2;
-		if (arrowSize === undefined) arrowSize = width * 5;
-		
-		ctx.lineWidth = width;
-		ctx.strokeStyle = color || "black";
-		
-		var angle = Math.atan2(to.y - from.y, to.x - from.x);
+  drawArrow(start, end, width = 2, color = "black", arrowSize = width + 10, fillColor = color) {
+    const ctx = this.ctx;
+    
+    const v = Vec2.sub(end, start);
+    const n = Vec2.normalize(v);
+    const pi6 = Math.PI / 6;
+    const end2 = Vec2.sub(end, Vec2.mul(n, arrowSize * 0.5));
 		
 		ctx.beginPath();
-		
-		ctx.moveTo(from.x, from.y);
-		ctx.lineTo(to.x, to.y);
-		
-		ctx.lineTo(to.x - arrowSize * Math.cos(angle - Math.PI / 6),
-			to.y - arrowSize * Math.sin(angle - Math.PI / 6));
-		
-		ctx.moveTo(to.x, to.y);
-		ctx.lineTo(to.x - arrowSize * Math.cos(angle + Math.PI / 6),
-			to.y - arrowSize * Math.sin(angle + Math.PI / 6));
-		
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end2.x, end2.y);
+
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+		ctx.moveTo(end.x, end.y);
+		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle - pi6), end.y - arrowSize * Math.sin(v.angle - pi6));
+		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle + pi6), end.y - arrowSize * Math.sin(v.angle + pi6));
 		ctx.closePath();
-		ctx.stroke();
-	}
-		
-	fillArrow(from, to, size, color) {
-		var ctx = this.ctx;
-		
-		size = size || 10;
-		ctx.fillStyle = color || "black";
-		
-		var angle = Math.atan2(to.y - from.y, to.x - from.x);
-		
-		ctx.beginPath();
-		
-		ctx.moveTo(to.x, to.y);
-		ctx.lineTo(to.x - size * Math.cos(angle - Math.PI / 6), to.y - size * Math.sin(angle - Math.PI / 6));
-		ctx.lineTo(to.x - size * Math.cos(angle + Math.PI / 6), to.y - size * Math.sin(angle + Math.PI / 6));
-		
-		ctx.closePath();
-		ctx.fill();
-	}
+
+    ctx.stroke();
+
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+  }
 		
 	drawPolygon(points, strokeWidth, strokeColor, fillColor) {
 		const ctx = this.ctx;
