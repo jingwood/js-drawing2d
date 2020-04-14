@@ -11,7 +11,7 @@ import { Graphics2D } from "./render/graphics";
 import { Scene2D } from "./scene/scene";
 import { Object2D } from "./scene/object";
 
-import { Line } from "./shapes/line";
+import { Line2D } from "./shapes/line2d";
 import { Rectangle2D } from "./shapes/rectangle";
 import { Ellipse2D } from "./shapes/ellipse";
 import { Image2D } from "./shapes/image";
@@ -23,5 +23,5 @@ import { Rect } from "./types/rect";
 import { Size } from "./types/size";
 
 export { Renderer2D, Graphics2D, Scene2D, Object2D };
-export { Line, Rectangle2D, Ellipse2D, Image2D, Polygon2D };
+export { Line2D, Rectangle2D, Ellipse2D, Image2D, Polygon2D };
 export { LineSegment, Polygon, Rect, Size };

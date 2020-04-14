@@ -17,7 +17,7 @@ import { Rect } from "../src/types/rect";
 import { Object2D } from "../src/scene/object.js";
 import { Size } from "../src/types/size";
 import { Polygon } from "../src/types/polygon.js";
-import { Polygon2D } from "../src/index.js";
+import { Polygon2D, Line2D } from "../src/index.js";
 
 class TestRect extends Rectangle2D {
   drawSelf(g) {
@@ -36,6 +36,8 @@ window.addEventListener("load", e => {
 
   scene.ondraw = g => {
     g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
+
+    g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 600 }, 2, "blue");
   };
 
   const rect1 = new TestRect();
@@ -86,4 +88,26 @@ window.addEventListener("load", e => {
   rect1clone.transparency = 0.8;
   rect1clone.enableCache = true;
   scene.add(rect1clone);
+
+
+  const panel = new Rectangle2D();
+  panel.origin.set(1400, 500);
+  panel.size.set(500, 500);
+  scene.add(panel);
+
+  const line1 = new Line2D(new Vec2(-200, -200), new Vec2(200, 200));
+  line1.style.strokeWidth = 30;
+  // line1.scale.set(.1, .1);
+  line1.on("mouseenter", e => {
+    line1.style.strokeColor = "#3333ff";
+    scene.requestUpdateFrame();
+  });
+  line1.on("mouseout", e => {
+    line1.style.strokeColor = "black";
+    scene.requestUpdateFrame();
+  });
+  panel.add(line1);
+
+
+  
 });
