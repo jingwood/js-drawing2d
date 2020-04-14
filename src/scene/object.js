@@ -223,6 +223,8 @@ export class Object2D {
   }
 
   add() {
+    if (arguments.length <= 0) return;
+
     for (let i = 0; i < arguments.length; i++) {
       const obj = arguments[i];
 
@@ -236,6 +238,10 @@ export class Object2D {
         obj.parent = this;
         obj.scene = this.scene;
       }
+    }
+
+    if (this.scene) {
+      this.scene.requestUpdateFrame();
     }
   }
 
