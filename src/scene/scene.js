@@ -115,28 +115,27 @@ export class Scene2D {
 
   mousedown(e) {
     const obj = this.findObjectByPosition(e.position);
-    const eventArg = this.createEventArgument(e, obj);
     
     if (obj) {
-      this.dragObject = obj;
-      obj.mousedown(eventArg);
+			this.dragObject = obj;
+      obj.mousedown(e);
     }
 
-    if (!eventArg.isProcessed) {
-      this.onmousedown(eventArg);
+    if (!e.isProcessed) {
+      this.onmousedown(e);
     }
   }
 
   mouseup(e) {
-    const eventArg = this.createEventArgument(e, this.dragObject);
+		if (this.dragObject) {
+			this.dragObject.mouseup(e);
 
-    if (this.dragObject) {
-      this.dragObject.click(eventArg);
+      this.dragObject.click(e);
       this.dragObject = null;
     }
 
-    if (!eventArg.isProcessed) {
-      this.onmouseup(eventArg);
+    if (!e.isProcessed) {
+      this.onmouseup(e);
     }
   }
 
