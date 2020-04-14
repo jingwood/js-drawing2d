@@ -108,7 +108,7 @@ export class Scene2D {
         target = obj;
         return false;
       }
-    }, { filter: obj => obj.visible && obj.isEnabled && obj._renderArgs.transparency > 0 });
+    }, { filter: obj => obj.visible && obj._renderArgs.transparency > 0 });
 
     return target;
   }

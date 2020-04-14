@@ -54,7 +54,7 @@ export class Object2D {
     this.isReceiveHover = false;
     this.isActive = false;
     this.isSelected = false;
-    this.isEnabled = true;
+    this.enabled = true;
     
     this._suspendUpdate = false;
 
@@ -263,14 +263,14 @@ export class Object2D {
   }
 
   hitTestPoint(p) {
-    return this.bbox.contains(this.pointToLocal(p));
+    return this.enabled && this.bbox.contains(this.pointToLocal(p));
   }
 
   findChildByPosition(p) {
     let target = null;
   
     this.eachChildInv(child => {
-      if (child.visible && child.isEnabled && child.hitTestPoint(p)) {
+      if (child.visible && child.hitTestPoint(p)) {
         target = child;
         return false;
       }
