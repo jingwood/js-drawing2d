@@ -533,10 +533,10 @@ export class Object2D {
 
   clone() {
     const prototypeType = Object.getPrototypeOf(this);
-    const newObj = Object.create(prototypeType);
+    let newObj = Object.create(prototypeType);
 
     if (prototypeType) {
-      prototypeType.constructor.call(newObj);
+      newObj = prototypeType.constructor.call(newObj);
     }
 
     newObj.origin.set(this.origin);
