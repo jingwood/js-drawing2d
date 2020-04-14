@@ -45,7 +45,7 @@ export class Object2D {
 
     this._parent = null;
     this._scene = null;
-    this.visible = true;
+    this._visible = true;
     this.zIndex = 0;
     this.style = new ObjectStyle();
     this._transparency = 1;
@@ -160,7 +160,22 @@ export class Object2D {
     if (this._scale.x !== v.x || this._scale.y !== v.y) {
       this._scale.set(v);
     }
-  }
+	}
+	
+	get visible() {
+		return this._visible;
+	}
+
+	set visible(v) {
+		if (this._visible !== v) {
+			this._visible = v;
+      this.onvisibleChanged();
+      
+      if (this.scene) {
+        this.scene.requestUpdateFrame();
+      }
+		}
+	}
 
   get transform() {
     return this._transform;
@@ -543,7 +558,7 @@ new EventDispatcher(Object2D).registerEvents(
   "begindrag", "drag", "enddrag",
   "keyup", "keydown",
   "draw",
-  "originChanged", "sizeChanged", "scaleChanged",
+  "originChanged", "sizeChanged", "scaleChanged", "visibleChanged",
   "hoverChanged",
 
   // "childAdd", "childRemove",
