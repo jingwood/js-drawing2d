@@ -27,7 +27,7 @@ export class LineSegment {
       
       case 4:
         this._start.set(arguments[0], arguments[1]);
-        this._end.start(arguments[2], arguments[3]);
+        this._end.set(arguments[2], arguments[3]);
         this.updateBoundingBox();
         break;
     }
