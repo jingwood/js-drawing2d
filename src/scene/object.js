@@ -70,6 +70,7 @@ export class Object2D {
     this.rotateOrigin = new Vec2();
     this.scaleOrigin = new Vec2();
     this._transform = new Matrix3().loadIdentity();
+    this._transformInversed = new Matrix3().loadIdentity();
     
     this.enableCache = false;
     this.cacheDirty = true;
@@ -301,8 +302,7 @@ export class Object2D {
   }
 
   pointToLocal(p) {
-    const t = this._transform.inverse();
-    return new Vec2(p).mulMat(t);
+    return new Vec2(p).mulMat(this._transformInversed);
   }
 
   pointToWorld(p) {
@@ -513,6 +513,8 @@ export class Object2D {
     } else {
       this._worldOrigin.set(this.origin);
     }
+
+    this._transformInversed = this._transform.inverse();
   }
 
   updateChildren() {
