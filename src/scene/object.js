@@ -10,6 +10,7 @@ import { Vec2, Matrix3, BoundingBox2D as BBox2D } from "@jingwood/graphics-math"
 import { EventDispatcher } from "@jingwood/input-control";
 import { ObjectStyle } from "./style";
 import { EventArgument } from "./eventarg";
+import { Rect } from "../types/rect";
 import { Size } from "../types/size";
 import { Renderer2D } from "../render/renderer";
 import { Graphics2D } from "../render/graphics";
@@ -289,7 +290,19 @@ export class Object2D {
   }
 
   hitTestPoint(p) {
-    return this.enabled && this.bbox.contains(this.pointToLocal(p));
+    return this.enabled && this.bbox.containsPoint(this.pointToLocal(p));
+  }
+
+  hitTestRect(rect) {
+    // const r = (rect instanceof Rect) ? rect : new Rect(rect);
+
+    // const p1 = this.pointToLocal(r.topLeft),
+    //   p2 = this.pointToLocal(r.topRight),
+    //   p3 = this.pointToLocal(r.bottomLeft),
+    //   p4 = this.pointToLocal(r.bottomRight);
+    
+    
+    return this.enabled && Rect.intersectsRect(this.wbbox.rect, rect);
   }
 
   findChildByPosition(p) {
@@ -412,6 +425,10 @@ export class Object2D {
     this.ondraw(g);
     this.drawChildren(g);
     this.drawAfterChildren(g);
+
+    if (g.options.debugMode && g.options.debugOptions.showBBox) {
+      g.drawRect(this.bbox.rect, 1, "blue");
+    }
   }
 
   drawSelf(g) {
