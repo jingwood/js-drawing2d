@@ -182,6 +182,10 @@ export class Object2D {
     return this._transform;
   }
 
+  get transformInversed() {
+    return this._transformInversed;
+  }
+
   get worldOrigin() {
     return this._worldOrigin;
   }
