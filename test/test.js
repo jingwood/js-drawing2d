@@ -41,8 +41,11 @@ window.addEventListener("load", e => {
 
   scene.on("keydown", e => {
 
-    g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 600 }, 2, "blue");
-  };
+    if (e.keyCode === Keys.Z) {
+      renderer.options.debugOptions.showBBox = !renderer.options.debugOptions.showBBox;
+      scene.requestUpdateFrame();
+    }
+  });
 
   const rect1 = new TestRect();
   rect1.origin.set(500, 300);
