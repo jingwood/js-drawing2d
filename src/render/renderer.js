@@ -10,20 +10,22 @@ import { Graphics2D } from "./graphics.js";
 import { InputController } from "@jingwood/input-control";
 import { Keys } from "@jingwood/input-control/dist/keyboard";
 
-const rendererDefaultOptions = {
-  canvasId: "canvas2d",
-  canvasInstance: undefined,
-  renderPixelRatio: window.devicePixelRatio || 1,
-  debugMode: true,
-  debugOptions: {
-    showBBox: false,
-  },
-  autoResize: true,
-};
-
 export class Renderer2D {
+  static rendererDefaultOptions() {
+    return {
+      canvasId: "canvas2d",
+      canvasInstance: undefined,
+      renderPixelRatio: window.devicePixelRatio || 1,
+      debugMode: true,
+      debugOptions: {
+        showBBox: false,
+      },
+      autoResize: true,
+    }
+  };
+  
   constructor(options) {
-    this.options = { ...rendererDefaultOptions, ...options };
+    this.options = { ...Renderer2D.rendererDefaultOptions(), ...options };
     this.renderSize = { width: 0, height: 0 };
 
     if (this.options.canvasInstance) {
