@@ -12,6 +12,8 @@ import { EventArgument } from "./eventarg";
 
 export class Scene2D {
   constructor() {
+    this.renderer = null;
+
     this.animation = false;
     this.requestedUpdateFrame = false;
 

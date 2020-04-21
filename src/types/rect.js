@@ -166,7 +166,11 @@ export class Rect {
 	
 	intersectsRect(r2) {
 		return MathFunctions2.rectIntersectsRect(this, r2);
-	}
+  }
+  
+  static intersectsRect(r1, r2) {
+		return MathFunctions2.rectIntersectsRect(r1, r2);
+  }
 
 	bbox() {
 		return new BBox2D(this.topLeft, this.bottomRight);
@@ -176,7 +180,19 @@ export class Rect {
 		return `[${this.x}, ${this.y}], [${this.width}, ${this.height}]`;
 	}
 
-	static createFromPoints(p1, p2) {
+  setFromPoints(p1, p2) {
+    var minx = Math.min(p1.x, p2.x);
+		var miny = Math.min(p1.y, p2.y);
+		var maxx = Math.max(p1.x, p2.x);
+    var maxy = Math.max(p1.y, p2.y);
+  
+    this.x = minx;
+    this.y = miny;
+    this.width = maxx - minx;
+    this.height = maxy - miny;
+	}
+
+	static fromPoints(p1, p2) {
 		var minx = Math.min(p1.x, p2.x);
 		var miny = Math.min(p1.y, p2.y);
 		var maxx = Math.max(p1.x, p2.x);
@@ -191,7 +207,20 @@ export class Rect {
 
 	static toPolygon(rect) {
 		return new Polygon([rect.topLeft, rect.topRight, rect.bottomRight, rect.bottomLeft]);
-	}
+  }
+  
+  // Rotate a rect will increase its size, sometimes it's better use to Polygon().applyTransform
+  applyTransform(mat) {
+    const transformedPoints = [this.topLeft, this.topRight, this.bottomRight,
+      this.bottomLeft].map(v => v.mulMat(mat));
+    
+    const minX = Math.min(...transformedPoints.map(v => v.x));
+    const minY = Math.min(...transformedPoints.map(v => v.y));
+    const maxX = Math.max(...transformedPoints.map(v => v.x));
+    const maxY = Math.max(...transformedPoints.map(v => v.y));
+
+    this.setFromPoints(new Vec2(minX, minY), new Vec2(maxX, maxY));
+  }
 }
 
 class SizeProperty {
