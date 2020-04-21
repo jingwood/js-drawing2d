@@ -81,7 +81,7 @@ export class Graphics2D {
 		this.fillColor = "white";
 	}
 
-	drawRect(rect, strokeWidth, strokeColor, fillColor) {
+	drawRect(rect, strokeWidth, strokeColor, fillColor, strokeStyle) {
 		const ctx = this.ctx;
 	
 		// ctx.beginPath();
@@ -91,22 +91,26 @@ export class Graphics2D {
 			ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
 		}
 		
-		if (!!strokeColor) {
+		if (strokeColor && strokeWidth > 0) {
 			ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = strokeWidth;
 
-			if (!!strokeWidth) {
-				ctx.lineWidth = strokeWidth;
-		
-				if (ctx.lineWidth > 0) {
-					ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
-				}
-			}
+      if (strokeStyle) {
+        switch (strokeStyle) {
+          case "dash":
+            ctx.setLineDash([5, 2]); break;
+        }
+      }
+
+      ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+
+      if (strokeStyle) ctx.setLineDash([]);
 		}
 		// ctx.closePath();
 
 	}
 
-	drawRoundRect(rect, cornerSize, strokeWidth = 1, strokeColor = "black", fillColor = "white") {
+	drawRoundRect(rect, cornerSize, strokeWidth = 1, strokeColor = "black", fillColor = "white", strokeStyle) {
 		const ctx = this.ctx;
 
 		const minEdge = Math.min(rect.width, rect.height);
@@ -133,9 +137,17 @@ export class Graphics2D {
 
 		if (strokeWidth > 0 && strokeColor) {
 			ctx.lineWidth = strokeWidth;
-			ctx.strokeStyle = strokeColor;
+      ctx.strokeStyle = strokeColor;
+      
+      switch (strokeStyle) {
+        case "dash":
+          ctx.setLineDash([strokeWidth, ctx.lineWidth]); break;
+      }
+
 			ctx.stroke();
-		}
+    
+      if (strokeStyle) ctx.setLineDash([]);
+    }
 	}
 
 	drawPoint(p, size = 3, strikeWidth, strikeColor, fillColor) {
@@ -322,7 +334,7 @@ export class Graphics2D {
 		}
 	}
 		
-  drawArrow(start, end, width = 2, color = "black", arrowSize = width + 10, fillColor = color) {
+  drawArrow(start, end, width = 2, color = "black", arrowSize = width + 10, fillColor = color, strokeStyle) {
     const ctx = this.ctx;
     
     const v = Vec2.sub(end, start);
@@ -330,23 +342,33 @@ export class Graphics2D {
     const pi6 = Math.PI / 6;
     const end2 = Vec2.sub(end, Vec2.mul(n, arrowSize * 0.5));
 		
-		ctx.beginPath();
+    ctx.beginPath();
+
     ctx.moveTo(start.x, start.y);
     ctx.lineTo(end2.x, end2.y);
 
     ctx.lineWidth = width;
-    ctx.strokeStyle = color;
+    ctx.strokeStyle = color;     
+
+    switch (strokeStyle) {
+      case "dash":
+        ctx.setLineDash([ctx.lineWidth, ctx.lineWidth]); break;
+    }
+
     ctx.stroke();
+
+    if (strokeStyle) ctx.setLineDash([]);
 
 		ctx.moveTo(end.x, end.y);
 		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle - pi6), end.y - arrowSize * Math.sin(v.angle - pi6));
 		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle + pi6), end.y - arrowSize * Math.sin(v.angle + pi6));
+    
 		ctx.closePath();
-
-    ctx.stroke();
 
     ctx.fillStyle = fillColor;
     ctx.fill();
+
+    
   }
 		
 	drawPolygon(points, strokeWidth, strokeColor, fillColor) {

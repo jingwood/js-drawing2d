@@ -34,8 +34,12 @@ window.addEventListener("load", e => {
   const scene = new Scene2D();
   renderer.show(scene);
 
-  scene.ondraw = g => {
+  scene.on("draw", g => {
     g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
+    g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 600 }, 10, "blue", 100, "blue", "dash");
+  });
+
+  scene.on("keydown", e => {
 
     g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 600 }, 2, "blue");
   };
@@ -107,6 +111,23 @@ window.addEventListener("load", e => {
     scene.requestUpdateFrame();
   });
   panel.add(line1);
+
+  // test select objects by rect
+  (_ => {
+    const selectedObjs = [];
+    const rect = new Rect(100, 100, 500, 1400);
+    const mat = new Matrix3().loadIdentity().translate(2000, 0).rotate(90);
+    rect.applyTransform(mat);
+
+    for (const obj of scene.objects) {
+      if (obj.hitTestRect(rect)) {
+        selectedObjs.push(obj);
+      }
+    }
+    scene.on("draw", g => g.drawRect(rect, 4, "black", null, "dash"));
+    
+    console.log(selectedObjs);
+  })();
 
 
   
