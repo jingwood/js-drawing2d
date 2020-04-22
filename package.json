@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.9.2",
-    "@jingwood/graphics-math": "d:/projects/js-graphics-math",
+    "@jingwood/graphics-math": "^1.1.5",
     "@jingwood/input-control": "^1.0.5"
   },
   "devDependencies": {
