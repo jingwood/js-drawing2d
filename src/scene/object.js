@@ -585,7 +585,7 @@ new EventDispatcher(Object2D).registerEvents(
   "mousedown", "mouseup", "mousemove", "mouseenter", "mouseout",
   "mousewheel", "click",
   "begindrag", "drag", "enddrag",
-  "keyup", "keydown",
+  // "keyup", "keydown",
   "draw",
   "originChanged", "sizeChanged", "scaleChanged", "visibleChanged",
   "hoverChanged",

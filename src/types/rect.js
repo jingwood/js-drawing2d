@@ -59,8 +59,19 @@ export class Rect {
 	}
 	
 	offset(value) {
-		this.x += value.x;
-		this.y += value.y;
+		switch (arguments.length) {
+			case 1:
+				if (typeof value === "object") {
+					this.x += value.x;
+					this.y += value.y;
+				}
+				break;
+			
+			case 2:
+				this.x += arguments[0];
+				this.y += arguments[1];
+				break;
+		}
 	}
 
 	get right() {

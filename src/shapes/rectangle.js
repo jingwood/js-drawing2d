@@ -23,6 +23,6 @@ export class Rectangle2D extends Object2D {
   }
 
   drawSelf(g) {
-    g.drawRect(this.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
+    g.drawRect(this.rect, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor, this.style.strokeStyle);
   }
 };
