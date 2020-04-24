@@ -37,6 +37,8 @@ export class Polygon {
 		
 		min.x = this._points[0].x;
 		min.y = this._points[0].y;
+		max.x = min.x;
+		max.y = min.y;
 
 		for (const { x, y } of this._points) {
 			if (min.x > x) min.x = x;
