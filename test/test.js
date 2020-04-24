@@ -97,10 +97,15 @@ window.addEventListener("load", e => {
   scene.add(rect1clone);
 
 
+  const layer = new Object2D();
+  layer.enabled = false;
+  scene.add(layer);
+
   const panel = new Rectangle2D();
+  panel.style.fillColor = "#d0f0ff";
   panel.origin.set(1400, 500);
   panel.size.set(500, 500);
-  scene.add(panel);
+  layer.add(panel);
 
   const line1 = new Line2D(new Vec2(-200, -200), new Vec2(200, 200));
   line1.style.strokeWidth = 30;
@@ -133,5 +138,13 @@ window.addEventListener("load", e => {
   })();
 
 
+  // const r1 = new Rectangle2D();
+  // r1.origin.set(100, 100);
+  // scene.add(r1);
+
+  scene.on("mousedown", e => {
+    const obj = scene.findObjectByPosition(e.position);
+    console.log(obj);
+  });
   
 });
