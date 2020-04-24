@@ -283,14 +283,17 @@ export class Object2D {
       const child = this.objects[i];
 
       if (!options || typeof options.filter !== "function" || options.filter(child)) {
-        if (child.eachChildInv(handler, options) === false) return false;
-        if (handler(child) === false) return false;
+        let ret = child.eachChildInv(handler, options);
+        if (ret) return ret;
+
+        ret = handler(child);
+        if (ret) return ret;
       }
     }
   }
 
   hitTestPoint(p) {
-    return this.enabled && this.bbox.containsPoint(this.pointToLocal(p));
+    return this.bbox.containsPoint(this.pointToLocal(p));
   }
 
   hitTestRect(rect) {
@@ -302,20 +305,29 @@ export class Object2D {
     //   p4 = this.pointToLocal(r.bottomRight);
     
     
-    return this.enabled && Rect.intersectsRect(this.wbbox.rect, rect);
+    return Rect.intersectsRect(this.wbbox.rect, rect);
   }
 
-  findChildByPosition(p) {
-    let target = null;
+  findChildByPosition(p, options) {
+    for (let i = this.objects.length - 1; i >= 0; i--) {
+      const child = this.objects[i];
+      if (!child.visible || child._renderArgs.transparency <= 0) continue;
   
-    this.eachChildInv(child => {
-      if (child.visible && child.hitTestPoint(p)) {
-        target = child;
-        return false;
+      if (options && typeof options.childrenFilter === "function") {
+        if (!options.childrenFilter(child)) continue;
       }
-    });
-  
-    return target;
+
+      const target = child.findChildByPosition(p, options);
+      if (target) return target;
+
+      if (!options || typeof options.filter !== "function"
+        || options.filter(child)) {
+
+        if (child.enabled && child.hitTestPoint(p)) {
+          return child;
+        }
+      }
+    }
   }
 
   pointToLocal(p) {

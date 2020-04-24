@@ -85,8 +85,11 @@ export class Scene2D {
       const obj = this.objects[i];
 
       if (!options || typeof options.filter !== "function" || options.filter(obj)) {
-        if (obj.eachChildInv(handler, options) === false) return false;
-        if (handler(obj) === false) return false;
+        let ret = obj.eachChildInv(handler, options);
+        if (ret) return ret;
+        
+        ret = handler(obj);
+        if (ret) return ret;
       }
     }
   }
@@ -102,17 +105,26 @@ export class Scene2D {
     }
   }
 
-  findObjectByPosition(p) {
-    let target = null;
+  findObjectByPosition(p, options) {
+    for (let i = this.objects.length - 1; i >= 0; i--) {
+      const obj = this.objects[i];
+      if (!obj.visible || obj._renderArgs.transparency <= 0) continue;
 
-    this.eachObjectInv(obj => {
-      if (obj.hitTestPoint(p)) {
-        target = obj;
-        return false;
+      if (options && typeof options.childrenFilter === "function") {
+        if (!options.childrenFilter(obj)) continue;
       }
-    }, { filter: obj => obj.visible && obj._renderArgs.transparency > 0 });
+          
+      const target = obj.findChildByPosition(p, options);
+      if (target) return target;
 
-    return target;
+      if (!options || typeof options.filter !== "function"
+        || options.filter(obj)) {
+
+        if (obj.enabled && obj.hitTestPoint(p)) {
+          return obj;
+        }
+      }
+    }
   }
 
   mousedown(e) {
