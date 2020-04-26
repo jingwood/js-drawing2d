@@ -613,9 +613,13 @@ export class Object2D {
     newObj.origin.set(this.origin);
     newObj.size.set(this.size);
     newObj.angle = this.angle;
+    
+    newObj.isReceiveHover = this.isReceiveHover;
 
     if (this.style) {
-      newObj.style = {};
+      if (typeof newObj.style !== "object") {
+        newObj.style = {};
+      }
       Object.assign(newObj.style, this.style);
     }
 

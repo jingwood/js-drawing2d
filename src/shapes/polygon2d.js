@@ -24,4 +24,10 @@ export class Polygon2D extends Object2D {
   drawSelf(g) {
     g.drawPolygon(this.polygon.points, this.style.strokeWidth, this.style.strokeColor, this.style.fillColor);
   }
+
+  clone() {
+    const cobj = super.clone();
+    cobj.polygon = this.polygon;
+    return cobj;
+  }
 };
