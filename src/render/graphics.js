@@ -339,6 +339,7 @@ export class Graphics2D {
     
     const v = Vec2.sub(end, start);
     const n = Vec2.normalize(v);
+    const angle = Math.atan2(n.y, n.x);
     const pi6 = Math.PI / 6;
     const end2 = Vec2.sub(end, Vec2.mul(n, arrowSize * 0.5));
 		
@@ -360,8 +361,8 @@ export class Graphics2D {
     if (strokeStyle) ctx.setLineDash([]);
 
 		ctx.moveTo(end.x, end.y);
-		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle - pi6), end.y - arrowSize * Math.sin(v.angle - pi6));
-		ctx.lineTo(end.x - arrowSize * Math.cos(v.angle + pi6), end.y - arrowSize * Math.sin(v.angle + pi6));
+		ctx.lineTo(end.x - arrowSize * Math.cos(angle - pi6), end.y - arrowSize * Math.sin(angle - pi6));
+		ctx.lineTo(end.x - arrowSize * Math.cos(angle + pi6), end.y - arrowSize * Math.sin(angle + pi6));
     
 		ctx.closePath();
 
