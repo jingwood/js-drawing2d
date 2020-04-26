@@ -71,13 +71,7 @@ window.addEventListener("load", e => {
   rect2.size.set(400, 300);
   scene.add(rect2);
 
-  const pobjs = [];
-  for (let i = 0; i < 300; i++) {
-    const cp = new Rectangle2D();//.clone();
-    cp.origin.set(Math.random() * 2000, Math.random() * 2000);
-    pobjs.push(cp);
-    scene.add(cp);
-  }
+
 
   const p1 = new Polygon2D([
     new Vec2(-200, -200), new Vec2(200, -100),
@@ -89,11 +83,7 @@ window.addEventListener("load", e => {
   p1.angle = 30;
   p1.isReceiveHover = true;
   p1.onclick = e => p1.angle += 5;
-  p1.ondrag = e => {
-    p1.offset(e.movement); e.isProcessed = true;
-    // scene.requestUpdateFrame();
-    setTimeout(_ => scene.requestUpdateFrame(), 100);
-  }
+  p1.ondrag = e => { p1.offset(e.movement); e.isProcessed = true; }
   p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + ","
     + Math.round(p1.worldOrigin.y), { x: 0, y: 0 }, "black", "center");
   const pr1 = new Rectangle2D();
@@ -101,9 +91,18 @@ window.addEventListener("load", e => {
   p1.add(pr1);
   scene.add(p1);
 
+  const pobjs = [];
+  for (let i = 0; i < 300; i++) {
+    const cp = p1.clone();
+    cp.origin.set(Math.random() * 2000, Math.random() * 2000);
+    cp.onmouseenter = e => cp.style.fillColor = '#00aaff';
+    cp.onmouseout = e => cp.style.fillColor = "yellow";
+    pobjs.push(cp);
+    scene.add(cp);
+  }
+
   function move(diff) {
     const dt = new Date();
-    console.log("drag...");
     window._updates = 0;
     pobjs.forEach(po => po.offset(diff));
     const elapsed = new Date() - dt;
