@@ -47,7 +47,6 @@ export class Object2D {
     this._parent = null;
     this._scene = null;
     this._visible = true;
-    this.zIndex = 0;
     this.style = new ObjectStyle();
     this._transparency = 1;
     
