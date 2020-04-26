@@ -70,6 +70,7 @@ export class Object2D {
     this._scale = new Vec2Property(this, 1, 1, _ => this.onscaleChanged());
     this.rotateOrigin = new Vec2();
     this.scaleOrigin = new Vec2();
+    this._transformDirty = true;
     this._transform = new Matrix3().loadIdentity();
     this._transformInversed = new Matrix3().loadIdentity();
     
@@ -89,6 +90,7 @@ export class Object2D {
   set parent(p) {
     if (this._parent !== p) {
       this._parent = p;
+      this._transformDirty = true;
       this.update();
     }
   }
@@ -150,6 +152,7 @@ export class Object2D {
   set angle(v) {
     if (this._angle !== v) {
       this._angle = v;
+      this._transformDirty = true;
       this.update();
     }
   }
@@ -385,11 +388,31 @@ export class Object2D {
   }
 
   offset(arg0, arg1) {
+    // const _this = this;
+
+    // function _offset(x, y) {
+    //   _this._origin._x += x;
+    //   _this._origin._y += y;
+
+    //   _this._transform.translate(x, y);
+
+    //   _this.updateChildrenTransform();
+    // }
+
+    // if (arguments.length === 1) {
+    //   _offset(arg0.x, arg0.y);
+    // } else if (arguments.length === 2) {
+    //   _offset(arg0, arg1);
+    // }
+
+    // if (this._scene) this._scene.requestUpdateFrame();
+
     if (arguments.length === 1) {
       this.origin.set(this.origin.x + arg0.x, this.origin.y + arg0.y);
     } else if (arguments.length === 2) {
       this.origin.set(this.origin.x + arg0, this.origin.y + arg1);
     }
+    
   }
 
   render(g) {
@@ -507,6 +530,11 @@ export class Object2D {
 
   updateTransform() {
 
+    //if (!this._transformDirty) return;
+
+    window._updates++;
+    this._transformDirty = false;
+
     this._transform.loadIdentity();
     this._transform.notIdentity = false;
 
@@ -555,6 +583,12 @@ export class Object2D {
       child.update();
     }
   }
+
+  updateChildrenTransform() {
+    for (const child of this.objects) {
+      child.updateTransform();
+    }
+  }
   
   updateBoundingBox() {
     const { width, height } = this.size.mul(0.5);
@@ -563,7 +597,9 @@ export class Object2D {
   }
 
   updateWorldBoundingBox() {
-    this.wbbox = this.bbox.transform(this.transform);
+    this.wbbox.set(this.bbox);
+    this.wbbox.applyTransform(this.transform);
+    // this.wbbox = this.bbox.transform(this.transform);
   }
 
   clone() {
@@ -587,6 +623,8 @@ export class Object2D {
       const newChild = child.clone();
       newObj.add(newChild);
     }
+
+    // newObj.transparency = obj.transparency;
 
     return newObj;
   }
@@ -619,13 +657,26 @@ class Vec2Property extends Vec2 {
 
   notify() {
     if (this.obj) {
+      this.obj._transformDirty = true;
       this.obj.update();
       this.changeCallback();
     }
   }
 
   set() {
-    super.set(...arguments);
+    switch (arguments.length) {
+			case 1:
+				const arg0 = arguments[0];
+				if (arg0) {
+					this._x = arg0.x;
+					this._y = arg0.y;
+				}
+				break;
+
+			case 2:
+				this._x = arguments[0]; this._y = arguments[1];
+				break;
+		}
     this.notify();
   }
 
@@ -678,6 +729,7 @@ class SizeProperty extends Size {
 
   notify() {
     if (this.obj) {
+      this.obj._transformDirty = true;
       this.obj.update();
       this.obj.onsizeChanged();
     }

@@ -42,8 +42,11 @@ export class Scene2D {
   }
 
   requestUpdateFrame() {
+    const oldStatus = this.requestedUpdateFrame;
+    
     this.requestedUpdateFrame = true;
-    if (this.renderer) {
+    
+    if (oldStatus === false && this.renderer) {
       requestAnimationFrame(_ => this.renderer.render());
     }
   }
