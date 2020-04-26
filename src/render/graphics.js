@@ -238,8 +238,9 @@ export class Graphics2D {
 	
 		let { x, y } = p;
 
+    ctx.textAlign = halign;
+    
 		if (halign === "center") {
-			ctx.textAlign = "center";
 			ctx.textBaseline = "middle";
 		}
 
