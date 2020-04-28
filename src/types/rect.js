@@ -167,7 +167,7 @@ export class Rect {
 	inflate(w, h) {
 		const hw = w * 0.5, hh = h * 0.5;
 		this.x -= hw; this.y -= hh;
-		this.width += hw; this.height += hh;
+		this.width += w; this.height += h;
 	}
 
 	contains(pos) {
