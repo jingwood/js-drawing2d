@@ -84,6 +84,26 @@ export class Object2D {
     }
   }
 
+  get x() {
+    return this._origin._x;
+  }
+
+  set x(v) {
+    if (this._origin._x !== v) {
+      this._origin.x = v;
+    }
+  }
+
+  get y() {
+    return this._origin._y;
+  }
+
+  set y(v) {
+    if (this._origin._y !== v) {
+      this._origin.y = v;
+    }
+  }
+
   set origin(v) {
     if (this._origin.x !== v.x || this._origin.y !== v.y) {
       this._origin.set(v);
