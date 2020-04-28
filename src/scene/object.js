@@ -16,30 +16,6 @@ import { Renderer2D } from "../render/renderer";
 import { Graphics2D } from "../render/graphics";
 import { MathFunctions } from "@jingwood/graphics-math/";
 
-// TODO: remove polyfill
-if (typeof BBox2D.transform !== "function") {
-  BBox2D.transform = function(bbox, matrix) {
-    const v1 = bbox.min.mulMat(matrix);
-    const v2 = new Vec2(bbox.max.x, bbox.min.y).mulMat(matrix);
-    const v3 = new Vec2(bbox.min.x, bbox.max.y).mulMat(matrix);
-    const v4 = bbox.max.mulMat(matrix);
-  
-    const minx = Math.min(v1.x, v2.x, v3.x, v4.x);
-    const miny = Math.min(v1.y, v2.y, v3.y, v4.y);
-    const maxx = Math.max(v1.x, v2.x, v3.x, v4.x);
-    const maxy = Math.max(v1.y, v2.y, v3.y, v4.y);
-  
-    return new BBox2D(new Vec2(minx, miny), new Vec2(maxx, maxy));
-  }
-}
-
-// TODO: remove polyfill
-if (typeof BBox2D.prototype.transform !== "function") {
-  BBox2D.prototype.transform = function(matrix) {
-    return BBox2D.transform(this, matrix);
-  }
-}
-
 export class Object2D {
   constructor() {
     this.objects = [];
