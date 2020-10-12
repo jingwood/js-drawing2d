@@ -73,6 +73,22 @@ export class Rect {
 				break;
 		}
 	}
+  
+	get left() {
+		return this.x;
+	}
+	
+	set left(v) {
+		this.x = v;
+  }
+    
+	get top() {
+		return this.y;
+	}
+	
+	set top(v) {
+		this.y = v;
+  }
 
 	get right() {
 		return this.x + this.width;
