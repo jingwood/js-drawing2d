@@ -89,7 +89,6 @@ window.addEventListener("load", e => {
   const pr1 = new Rectangle2D();
   pr1.origin.set(100, 0);
   p1.add(pr1);
-  scene.add(p1);
 
   const pobjs = [];
   for (let i = 0; i < 300; i++) {
@@ -100,6 +99,9 @@ window.addEventListener("load", e => {
     pobjs.push(cp);
     scene.add(cp);
   }
+
+  p1.style.fillColor = 'red';
+  scene.add(p1);
 
   function move(diff) {
     const dt = new Date();
