@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Rectangle2D } from "./rectangle.js";
+import { Rectangle2D } from "./rectangle2d.js";
 import { Rect } from "../types/rect.js";
 
 export class ActivePoint extends Rectangle2D {

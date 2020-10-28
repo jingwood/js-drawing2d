@@ -11,7 +11,7 @@ import { Keys } from "@jingwood/input-control";
 import { MathFunctions2 as _mf2 } from "@jingwood/graphics-math";
 import { Renderer2D } from "../src/render/renderer.js";
 import { Scene2D } from "../src/scene/scene.js";
-import { Rectangle2D } from "../src/shapes/rectangle.js";
+import { Rectangle2D } from "../src/shapes/rectangle2d.js";
 import { Ellipse } from "../src/shapes/ellipse";
 import { Rect } from "../src/types/rect";
 import { Object2D } from "../src/scene/object.js";
