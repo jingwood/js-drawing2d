@@ -10,9 +10,18 @@ import { Object2D } from "../scene/object.js";
 import { Rect } from "../types/rect.js";
 
 export class Rectangle2D extends Object2D {
-  constructor() {
+  constructor(rect) {
     super();
     this.rect = new Rect();
+    
+    if (rect) {
+      this.setFromRect(rect);
+    }
+  }
+
+  setFromRect(rect) {
+    this.origin.set(rect.origin);
+    this.size.set(rect.size);
   }
 
   update() {

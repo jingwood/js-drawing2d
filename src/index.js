@@ -12,7 +12,7 @@ import { Scene2D } from "./scene/scene";
 import { Object2D } from "./scene/object";
 
 import { Line2D } from "./shapes/line2d";
-import { Rectangle2D } from "./shapes/rectangle";
+import { Rectangle2D } from "./shapes/rectangle2d";
 import { Ellipse2D } from "./shapes/ellipse";
 import { Image2D } from "./shapes/image";
 import { Polygon2D } from "./shapes/polygon2d";

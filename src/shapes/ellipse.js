@@ -6,7 +6,7 @@
 // MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
-import { Rectangle2D } from "./rectangle.js";
+import { Rectangle2D } from "./rectangle2d.js";
 
 export class Ellipse2D extends Rectangle2D {
   constructor(x, y, w, h) {

@@ -26,25 +26,40 @@ export class Rect {
 				this.height = 0;
 				break;
 			
-			case 1:
-				if (typeof arguments[0] === "object") {
-					const { x, y, width, height } = arguments[0];
-					this.set(x, y, width, height);
-				}
+      case 1:
+        {
+          const r2 = arguments[0];
+          if (typeof r2 === "object") {
+            this.x = r2.x || 0;
+            this.y = r2.y || 0;
+            this.width = r2.width || 0;
+            this.height = r2.height || 0;
+          }
+        }
 				break;
 
-			case 2:
-				this.x = arguments[0].x;
-				this.y = arguments[0].y;
-				this.width = arguments[1].width;
-				this.height = arguments[1].height;
+      case 2:
+        {
+          const point = arguments[0];
+          const size = arguments[1];
+        
+          if (typeof point === 'object') {
+            this.x = point.x || 0;
+            this.y = point.y || 0;
+          }
+      
+          if (typeof size === 'object') {
+            this.width = size.width || 0;
+            this.height = size.height || 0;
+          }
+        }
 				break;
 
 			case 4:
-				this.x = x;
-				this.y = y;
-				this.width = width;
-				this.height = height;
+				this.x = x || 0;
+				this.y = y || 0;
+				this.width = width || 0;
+				this.height = height || 0;
 				break;
 		}
 	}
@@ -73,6 +88,22 @@ export class Rect {
 				break;
 		}
 	}
+  
+	get left() {
+		return this.x;
+	}
+	
+	set left(v) {
+		this.x = v;
+  }
+    
+	get top() {
+		return this.y;
+	}
+	
+	set top(v) {
+		this.y = v;
+  }
 
 	get right() {
 		return this.x + this.width;
@@ -236,7 +267,8 @@ export class Rect {
 
 class SizeProperty {
   constructor(rect) {
-		if (!rect) throw Error("Must specify an instance of rect type");
+    if (!rect) throw Error("Must specify an instance of rect type");
+    this.rect = rect;
 	}
 	
 	set(width, height) {

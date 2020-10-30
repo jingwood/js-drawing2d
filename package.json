@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "test": "parcel --out-dir output html/test.html",
-    "serve": "parcel --out-dir output html/test.html -p 8003",
+    "start": "parcel --out-dir output html/test.html -p 8003",
     "build": "npx babel src -d dist --verbose"
   },
   "repository": "https://github.com/jingwood/js-drawing2d.git",
