@@ -527,7 +527,7 @@ export class Object2D {
 
     //if (!this._transformDirty) return;
 
-    window._updates++;
+    // window._updates++;
     this._transformDirty = false;
 
     this._transform.loadIdentity();
