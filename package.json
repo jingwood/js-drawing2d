@@ -1,6 +1,6 @@
 {
   "name": "@jingwood/drawing2d",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "main": "dist/index.js",
   "files": [
     "/dist"
@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/runtime": "^7.9.2",
     "@jingwood/graphics-math": "^1.1.14",
-    "@jingwood/input-control": "^1.0.10"
+    "@jingwood/input-control": "^1.0.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
