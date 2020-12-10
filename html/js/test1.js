@@ -9,15 +9,16 @@
 import { Vec2, Matrix3 } from "@jingwood/graphics-math";
 import { Keys } from "@jingwood/input-control";
 import { MathFunctions2 as _mf2 } from "@jingwood/graphics-math";
-import { Renderer2D } from "../src/render/renderer.js";
-import { Scene2D } from "../src/scene/scene.js";
-import { Rectangle2D } from "../src/shapes/rectangle.js";
-import { Ellipse } from "../src/shapes/ellipse";
-import { Rect } from "../src/types/rect";
-import { Object2D } from "../src/scene/object.js";
-import { Size } from "../src/types/size";
-import { Polygon } from "../src/types/polygon.js";
-import { Polygon2D, Line2D } from "../src/index.js";
+import { Renderer2D } from "../../src/render/renderer.js";
+import { Scene2D } from "../../src/scene/scene.js";
+import { Rectangle2D } from "../../src/shapes/rectangle2d.js";
+import { Ellipse } from "../../src/shapes/ellipse";
+import { Rect } from "../../src/types/rect";
+import { Object2D } from "../../src/scene/object.js";
+import { Size } from "../../src/types/size";
+import { Polygon } from "../../src/types/polygon.js";
+import { Polygon2D } from "../../src/shapes/polygon2d.js";
+import { Line2D } from "../../src/shapes/line2d.js";
 
 class TestRect extends Rectangle2D {
   drawSelf(g) {

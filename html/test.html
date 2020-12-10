@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>Drawing2D Test</title>
-    <script src="../test/test.js"></script>
+    <script src="js/test.js"></script>
     <style type="text/css">
     html, body {
       width: 100%;
@@ -18,9 +18,31 @@
     #canvas2d:focus{
       outline: none;
     }
+
+    .top-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 0.2em;
+      height: 1em;
+      background-color: rgba(100, 100, 100, 0.5)
+    }
+
+    .top-menu a:not(:last-child) {
+      border-right: #333 1px solid;
+      padding-right: 0.5em;
+      margin-right: 0.5em;
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas2d"></canvas>
+
+  <div class='top-menu'>
+    <a href="test1.html">test1</a>
+    <a href="test2.html">test2</a>
+    <a href="test3_multicanvas.html">test3_multicanvas</a>
+  </div>
 </body>
 </html>
