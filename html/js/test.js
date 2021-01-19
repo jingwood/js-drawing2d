@@ -37,6 +37,8 @@ window.addEventListener("load", e => {
   scene.on("draw", g => {
     g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
     g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 1500 }, 10, "blue", 100, "blue", "dash");
+
+    g.drawLine({ x: 100, y: 100 }, { x: 300, y: 110 }, 4, 'red', [5, 15, 25]);
   });
 
   scene.on("keydown", e => {

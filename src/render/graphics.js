@@ -262,9 +262,20 @@ export class Graphics2D {
 		}
 	}
   		
-	drawLine(from, to, strokeWidth = 1, strokeColor = "black") {
+	drawLine(from, to, strokeWidth = 1, strokeColor = "black", strokeStyle = undefined) {
 		const ctx = this.ctx;
 
+		ctx.lineWidth = strokeWidth;
+    ctx.strokeStyle = strokeColor;
+    
+    if (strokeStyle && strokeStyle !== 'solid') {
+      if (Array.isArray(strokeStyle)) {
+        ctx.setLineDash(strokeStyle);
+      } else {
+        ctx.setLineDash([8, 4, 4]);
+      }
+    }
+    
 		ctx.beginPath();
 
 		if (Array.isArray(from)) {
@@ -275,11 +286,12 @@ export class Graphics2D {
 			ctx.lineTo(to.x, to.y);
 		}
 
-		ctx.closePath();
-
-		ctx.lineWidth = strokeWidth;
-		ctx.strokeStyle = strokeColor;
+    ctx.closePath();
     ctx.stroke();
+
+    if (strokeStyle) {
+      ctx.setLineDash([]);
+    }
 	}
 		
 	drawLineSegments() {
