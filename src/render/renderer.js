@@ -95,8 +95,10 @@ export class Renderer2D {
       });
     }
     
-    this.canvas.tabIndex = 0;
-    this.canvas.focus();
+    if (this.options.canvasAutoFocus !== false) {
+      this.canvas.tabIndex = 0;
+      this.canvas.focus();
+    }
 
     this.render();
   }
