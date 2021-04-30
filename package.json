@@ -1,6 +1,6 @@
 {
   "name": "@jingwood/drawing2d",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "main": "dist/index.js",
   "files": [
     "/dist"
