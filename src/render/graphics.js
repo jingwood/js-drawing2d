@@ -83,28 +83,28 @@ export class Graphics2D {
 
 	drawRect(rect, strokeWidth, strokeColor, fillColor, strokeStyle) {
 		const ctx = this.ctx;
-	
+
 		// ctx.beginPath();
 
 		if (fillColor) {
 			ctx.fillStyle = fillColor;
 			ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
 		}
-		
+
 		if (strokeColor && strokeWidth > 0) {
 			ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = strokeWidth;
+			ctx.lineWidth = strokeWidth;
 
-      if (strokeStyle) {
-        switch (strokeStyle) {
-          case "dash":
-            ctx.setLineDash([5, 2]); break;
-        }
-      }
+			if (strokeStyle) {
+				switch (strokeStyle) {
+					case "dash":
+						ctx.setLineDash([5, 2]); break;
+				}
+			}
 
-      ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+			ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
 
-      if (strokeStyle) ctx.setLineDash([]);
+			if (strokeStyle) ctx.setLineDash([]);
 		}
 		// ctx.closePath();
 
@@ -121,7 +121,7 @@ export class Graphics2D {
 			x = rect.x, y = rect.y,
 			hc = cornerSize / 2,
 			xe = x + w, ye = y + h;
-	
+
 		ctx.beginPath();
 		ctx.moveTo(x + hc, y);
 		ctx.arc(xe - hc, y + hc, hc, Math.PI / 2 + Math.PI, 0);
@@ -137,17 +137,17 @@ export class Graphics2D {
 
 		if (strokeWidth > 0 && strokeColor) {
 			ctx.lineWidth = strokeWidth;
-      ctx.strokeStyle = strokeColor;
-      
-      switch (strokeStyle) {
-        case "dash":
-          ctx.setLineDash([strokeWidth, ctx.lineWidth]); break;
-      }
+			ctx.strokeStyle = strokeColor;
+
+			switch (strokeStyle) {
+				case "dash":
+					ctx.setLineDash([strokeWidth, ctx.lineWidth]); break;
+			}
 
 			ctx.stroke();
-    
-      if (strokeStyle) ctx.setLineDash([]);
-    }
+
+			if (strokeStyle) ctx.setLineDash([]);
+		}
 	}
 
 	drawPoint(p, size = 3, strikeWidth, strikeColor, fillColor) {
@@ -165,7 +165,7 @@ export class Graphics2D {
 		const w = rect.width, h = rect.height;
 		const hw = w / 2, hh = h / 2;
 		const x = rect.x, y = rect.y;
-	
+
 		const kappa = 0.5522848,
 			ox = hw * kappa,   // control point offset horizontal
 			oy = hh * kappa,   // control point offset vertical
@@ -173,21 +173,21 @@ export class Graphics2D {
 			ye = y + h,        // y-end
 			xm = x + hw,       // x-middle
 			ym = y + hh;       // y-middle
-	
+
 		ctx.beginPath();
 		ctx.moveTo(x, ym);
 		ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
 		ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
 		ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
 		ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-	
+
 		ctx.closePath();
 
 		if (fillColor) {
 			ctx.fillStyle = fillColor;
 			ctx.fill();
 		}
-	
+
 		if (strokeWidth || strokeColor) {
 			ctx.lineWidth = strokeWidth;
 			ctx.strokeStyle = strokeColor;
@@ -197,7 +197,7 @@ export class Graphics2D {
 
 	drawArc(rect, startAngle, endAngle, strokeWidth, strokeColor, fillColor) {
 		const ctx = this.ctx;
-		
+
 		strokeWidth = strokeWidth || this.strokeWidth || 1;
 		strokeColor = strokeColor || this.strokeColor || "black";
 		fillColor = fillColor || this.fillColor;
@@ -206,7 +206,7 @@ export class Graphics2D {
 			w = rect.width, h = rect.height,
 			hw = w / 2, hh = h / 2,
 			r = Math.max(w, h);
-		
+
 		ctx.beginPath();
 		ctx.moveTo(x, y);
 		ctx.arc(x, y, r, startAngle * Math.PI / 180, endAngle * Math.PI / 180);
@@ -216,7 +216,7 @@ export class Graphics2D {
 			ctx.fillStyle = fillColor;
 			ctx.fill();
 		}
-	
+
 		if (strokeWidth > 0 && strokeColor) {
 			ctx.lineWidth = strokeWidth;
 			ctx.strokeStyle = strokeColor;
@@ -226,27 +226,27 @@ export class Graphics2D {
 
 	drawImage(image, x, y, width, height) {
 		var ctx = this.ctx;
-		
+
 		ctx.drawImage(image, x, y, width, height);
 	}
 
 	drawText(text, p, color, halign, font) {
 		const ctx = this.ctx;
-	
-		ctx.fillStyle = color || "black";		
+
+		ctx.fillStyle = color || "black";
 		ctx.font = font || "1.5em Arial";
-	
+
 		let { x, y } = p;
 
-    ctx.textAlign = halign;
-    
+		ctx.textAlign = halign;
+
 		if (halign === "center") {
 			ctx.textBaseline = "middle";
 		}
 
-    if (typeof text !== "string") {
-      text = new String(text);
-    }
+		if (typeof text !== "string") {
+			text = new String(text);
+		}
 
 		const lines = text.split('\n');
 
@@ -256,26 +256,26 @@ export class Graphics2D {
 		for (var i = 0; i < lines.length; i++) {
 			const line = lines[i];
 			let lx = x;
-		
+
 			ctx.fillText(line, lx, y);
 			y += lineheight;
 		}
 	}
-  		
+
 	drawLine(from, to, strokeWidth = 1, strokeColor = "black", strokeStyle = undefined) {
 		const ctx = this.ctx;
 
 		ctx.lineWidth = strokeWidth;
-    ctx.strokeStyle = strokeColor;
-    
-    if (strokeStyle && strokeStyle !== 'solid') {
-      if (Array.isArray(strokeStyle)) {
-        ctx.setLineDash(strokeStyle);
-      } else {
-        ctx.setLineDash([8, 4, 4]);
-      }
-    }
-    
+		ctx.strokeStyle = strokeColor;
+
+		if (strokeStyle && strokeStyle !== 'solid') {
+			if (Array.isArray(strokeStyle)) {
+				ctx.setLineDash(strokeStyle);
+			} else {
+				ctx.setLineDash([8, 4, 4]);
+			}
+		}
+
 		ctx.beginPath();
 
 		if (Array.isArray(from)) {
@@ -286,32 +286,32 @@ export class Graphics2D {
 			ctx.lineTo(to.x, to.y);
 		}
 
-    ctx.closePath();
-    ctx.stroke();
+		ctx.closePath();
+		ctx.stroke();
 
-    if (strokeStyle) {
-      ctx.setLineDash([]);
-    }
+		if (strokeStyle) {
+			ctx.setLineDash([]);
+		}
 	}
-		
+
 	drawLineSegments() {
 		return this.drawLines(...arguments);
 	}
 
 	drawLines(lines, width, color, strip) {
 		if (lines.length < 2) return;
-	
+
 		const ctx = this.ctx;
-	
+
 		if (width === undefined) width = this.strokeWidth;
 		if (color === undefined) color = this.strokeColor;
 
 		if (width > 0 && color != "transparent") {
 			ctx.lineWidth = width || 1;
 			ctx.strokeStyle = color || "black";
-	
+
 			ctx.beginPath();
-	
+
 			if (strip) {
 				const from = lines[0];
 
@@ -346,58 +346,58 @@ export class Graphics2D {
 			ctx.stroke();
 		}
 	}
-		
-  drawArrow(start, end, width = 2, color = "black", arrowSize = width + 10, fillColor = color, strokeStyle) {
-    const ctx = this.ctx;
-    
-    const v = Vec2.sub(end, start);
-    const n = Vec2.normalize(v);
-    const angle = Math.atan2(n.y, n.x);
-    const pi6 = Math.PI / 6;
-    const end2 = Vec2.sub(end, Vec2.mul(n, arrowSize * 0.5));
-		
-    ctx.beginPath();
 
-    ctx.moveTo(start.x, start.y);
-    ctx.lineTo(end2.x, end2.y);
+	drawArrow(start, end, width = 2, color = "black", arrowSize = width + 10, fillColor = color, strokeStyle) {
+		const ctx = this.ctx;
 
-    ctx.lineWidth = width;
-    ctx.strokeStyle = color;     
+		const v = Vec2.sub(end, start);
+		const n = Vec2.normalize(v);
+		const angle = Math.atan2(n.y, n.x);
+		const pi6 = Math.PI / 6;
+		const end2 = Vec2.sub(end, Vec2.mul(n, arrowSize * 0.5));
 
-    switch (strokeStyle) {
-      case "dash":
-        ctx.setLineDash([ctx.lineWidth, ctx.lineWidth]); break;
-    }
+		ctx.beginPath();
 
-    ctx.stroke();
+		ctx.moveTo(start.x, start.y);
+		ctx.lineTo(end2.x, end2.y);
 
-    if (strokeStyle) ctx.setLineDash([]);
+		ctx.lineWidth = width;
+		ctx.strokeStyle = color;
+
+		switch (strokeStyle) {
+			case "dash":
+				ctx.setLineDash([ctx.lineWidth, ctx.lineWidth]); break;
+		}
+
+		ctx.stroke();
+
+		if (strokeStyle) ctx.setLineDash([]);
 
 		ctx.moveTo(end.x, end.y);
 		ctx.lineTo(end.x - arrowSize * Math.cos(angle - pi6), end.y - arrowSize * Math.sin(angle - pi6));
 		ctx.lineTo(end.x - arrowSize * Math.cos(angle + pi6), end.y - arrowSize * Math.sin(angle + pi6));
-    
+
 		ctx.closePath();
 
-    ctx.fillStyle = fillColor;
-    ctx.fill();
+		ctx.fillStyle = fillColor;
+		ctx.fill();
 
-    
-  }
-		
+
+	}
+
 	drawPolygon(points, strokeWidth, strokeColor, fillColor) {
 		const ctx = this.ctx;
 
 		if (!points || points.length < 2) return;
-		
+
 		ctx.beginPath();
-		
+
 		var p0 = points[0];
 		if (Array.isArray(p0))
 			ctx.moveTo(p0[0], p0[1]);
 		else
 			ctx.moveTo(p0.x, p0.y);
-		
+
 		for (var i = 1; i < points.length; i++) {
 			var p = points[i];
 			if (Array.isArray(p))
@@ -405,14 +405,14 @@ export class Graphics2D {
 			else
 				ctx.lineTo(p.x, p.y);
 		}
-		
+
 		if (Array.isArray(p0))
 			ctx.lineTo(p0[0], p0[1]);
 		else
 			ctx.lineTo(p0.x, p0.y);
 
 		ctx.closePath();
-		
+
 		if (fillColor) {
 			ctx.fillStyle = fillColor;
 			ctx.fill();
@@ -421,7 +421,7 @@ export class Graphics2D {
 		if (strokeWidth || strokeColor) {
 			ctx.lineWidth = strokeWidth || 1;
 			ctx.strokeStyle = strokeColor || "black";
-		
+
 			ctx.stroke();
 		}
 	}
