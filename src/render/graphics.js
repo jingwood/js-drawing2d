@@ -230,35 +230,58 @@ export class Graphics2D {
 		ctx.drawImage(image, x, y, width, height);
 	}
 
-	drawText(text, p, color, halign, font) {
-		const ctx = this.ctx;
+	drawText(text, p, color, font, options) {
+		const ctx = this.ctx
 
-		ctx.fillStyle = color || "black";
-		ctx.font = font || "1.5em Arial";
+		options = {
+			hAlign: 'center',
+			lineHeight: 30,
+			...options
+		}
 
-		let { x, y } = p;
+		ctx.fillStyle = color || "black"
+		ctx.font = font || "1.5em Arial"
 
-		ctx.textAlign = halign;
+		let { x, y } = p
+
+		const halign = options && options.hAlign ? options.hAlign : 'center'
+		ctx.textAlign = halign
 
 		if (halign === "center") {
-			ctx.textBaseline = "middle";
+			ctx.textBaseline = "middle"
 		}
 
 		if (typeof text !== "string") {
-			text = new String(text);
+			text = new String(text)
 		}
 
-		const lines = text.split('\n');
+    let stroked = false
 
-		// TODO: decide line height
-		const lineheight = 30;
+    if (options.strokeStyle) {
+			ctx.strokeStyle = options.strokeStyle
+      stroked = true
+    }
+
+    if (options.strokeWidth) {
+      ctx.lineWidth = options.strokeWidth
+      stroked = true
+    }
+
+		const lines = text.split('\n')
+
+		// TODO: decide line height automatically
+		const lineheight = (options && options.lineHeight) ? options.lineHeight : 30
 
 		for (var i = 0; i < lines.length; i++) {
-			const line = lines[i];
-			let lx = x;
+			const line = lines[i]
+			let lx = x
 
-			ctx.fillText(line, lx, y);
-			y += lineheight;
+      if (stroked) {
+        ctx.strokeText(line, lx, y);
+      }
+
+			ctx.fillText(line, lx, y)
+			y += lineheight
 		}
 	}
 
