@@ -82,6 +82,10 @@ export class Polygon {
 		return MathFunctions2.polygonContainsRect(this._points, rect)
 	}
 
+  intersectsRect(rect) {
+    return MathFunctions2.rectIntersectsPolygon(rect, this._points)
+  }
+
 	distanceToPoint(p) {
 		if (!this._points)
 			return Number.MAX_VALUE

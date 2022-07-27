@@ -1,6 +1,6 @@
 {
   "name": "@jingwood/drawing2d",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "main": "dist/index.js",
   "files": [
     "/dist"
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.9.2",
-    "@jingwood/graphics-math": "^1.1.18",
+    "@jingwood/graphics-math": "1.1.19",
     "@jingwood/input-control": "^1.0.11"
   },
   "devDependencies": {
