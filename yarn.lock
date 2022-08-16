@@ -1109,7 +1109,7 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@jingwood/graphics-math@1.1.19":
+"@jingwood/graphics-math@^1.1.19":
   version "1.1.19"
   resolved "https://registry.yarnpkg.com/@jingwood/graphics-math/-/graphics-math-1.1.19.tgz#7226e78882caf87f90e979a7d4c2bffa144b315b"
   integrity sha512-gY1fv6slHxPeS/kDMhcyZVpkqQg4l47fqeSjTFUg1d88wmXzrLECBRNgZK2jxLGVjOBlSdwq7SgSQ33CiNRgqw==

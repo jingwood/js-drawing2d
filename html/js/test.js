@@ -34,6 +34,9 @@ window.addEventListener("load", e => {
   const scene = new Scene2D();
   renderer.show(scene);
 
+  window.renderer = renderer
+  window.scene = scene
+
   scene.on("draw", g => {
     g.drawRoundRect({ x: 10, y: 10, width: 400, height: 40 }, 50, 6, "#aaa", "#eee");
     g.drawArrow({ x: 100, y: 600 }, { x: 700, y: 1500 }, 10, "blue", 100, "blue", "dash");
