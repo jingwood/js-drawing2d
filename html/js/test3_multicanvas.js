@@ -37,7 +37,8 @@ window.addEventListener("load", e => {
   const obj2 = new Rectangle2D();
   obj2.origin.set(500, 500);
   obj2.style.strokeColor = 'blue';
-  setInterval(_ => obj2.angle += 5, 100);
+  obj2.ondrag = e => obj2.offset(e.movement);
+  setInterval(_ => obj2.angle += 1, 10);
   scene2.add(obj2);
 
 });
