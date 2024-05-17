@@ -588,7 +588,7 @@ export class Object2D {
     let newObj = Object.create(prototypeType)
 
     if (prototypeType) {
-      newObj = prototypeType.constructor.call(newObj)
+      newObj = Reflect.construct(prototypeType.constructor, newObj)
     }
 
     newObj.origin.set(this.origin)
