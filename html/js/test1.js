@@ -24,8 +24,7 @@ class TestRect extends Rectangle2D {
   drawSelf(g) {
     super.drawSelf(g);
 
-    g.drawText(this.worldOrigin.x + "," + this.worldOrigin.y, { x: 0, y: 0 },
-      "black", "center");
+    g.drawText(this.worldOrigin.x + "," + this.worldOrigin.y, { x: 0, y: 0 });
   }
 }
 
@@ -85,8 +84,7 @@ window.addEventListener("load", e => {
   p1.isReceiveHover = true;
   p1.onclick = e => p1.angle += 5;
   p1.ondrag = e => { p1.offset(e.movement); e.isProcessed = true; }
-  p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + ","
-    + Math.round(p1.worldOrigin.y), { x: 0, y: 0 }, "black", "center");
+  p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + "," + Math.round(p1.worldOrigin.y), { x: 0, y: 0 });
   const pr1 = new Rectangle2D();
   pr1.origin.set(100, 0);
   p1.add(pr1);

@@ -260,7 +260,7 @@ export class Graphics2D {
     }
 
     ctx.fillStyle = color || 'black'
-    ctx.font = font || '1.5em Arial'
+    ctx.font = font || '2rem Arial'
 
     let { x, y } = p
 
