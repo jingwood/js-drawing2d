@@ -6,8 +6,8 @@
     "/dist"
   ],
   "scripts": {
-    "test": "parcel --out-dir output html/test.html",
-    "start": "parcel --out-dir output html/test.html -p 8003",
+    "test": "parcel html/test.html",
+    "start": "parcel html/test.html -p 8003",
     "build": "npx babel src -d dist --verbose"
   },
   "repository": "https://github.com/jingwood/js-drawing2d.git",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@jingwood/graphics-math": "^1.1.19",
-    "@jingwood/input-control": "^1.0.11"
+    "@jingwood/input-control": "^1.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -23,7 +23,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.9.5",
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
-    "parcel": "1.12.3"
+    "parcel": "^2.12.0"
   },
   "bugs": {
     "url": "https://github.com/jingwood/js-drawing2d/issues"
