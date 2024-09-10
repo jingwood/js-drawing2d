@@ -416,7 +416,7 @@ export class Object2D {
       g.ctx.globalAlpha = 1
     }
 
-    g.applyTransform(this._transform)
+    g.setTransform(this._transform)
 
     if (this.enableCache) {
       if (this.cacheDirty) {

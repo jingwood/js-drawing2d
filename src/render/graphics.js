@@ -65,6 +65,7 @@ export class Graphics2D {
 
   applyTransform(t) {
     t = t.mul(this.currentTransform)
+    this.currentTransform.copyFrom(t)
     this.ctx.setTransform(t.a1, t.b1, t.a2, t.b2, t.a3, t.b3)
   }
 

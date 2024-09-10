@@ -7,21 +7,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Vec2, Matrix3 } from "@jingwood/graphics-math";
-import { Keys, MouseButtons } from "@jingwood/input-control";
+// import { Keys, MouseButtons } from "@jingwood/input-control";
 import { MathFunctions2 as _mf2 } from "@jingwood/graphics-math";
 import { Renderer2D } from "../../src/index.js";
 import { Scene2D } from "../../src/index.js";
 import { Rectangle2D } from "../../src/index.js";
-import { Ellipse } from "../../src/shapes/ellipse";
-import { Rect } from "../../src/types/rect";
-import { Object2D } from "../../src/scene/object.js";
-import { Size } from "../../src/types/size";
-import { Polygon } from "../../src/types/polygon.js";
-import { Polygon2D, Line2D } from "../../src/index.js";
+// import { Ellipse } from "../../src/shapes/ellipse";
+// import { Rect } from "../../src/types/rect";
+// import { Object2D } from "../../src/scene/object.js";
+// import { Size } from "../../src/types/size";
+// import { Polygon } from "../../src/types/polygon.js";
+// import { Polygon2D, Line2D } from "../../src/index.js";
 
 window.addEventListener("load", e => {
   const renderer = new Renderer2D()
-  const ic = renderer.inputController
+  // const ic = renderer.inputController
 
   const scene = new Scene2D()
   renderer.show(scene)
