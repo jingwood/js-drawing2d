@@ -6,7 +6,7 @@
     "/dist"
   ],
   "scripts": {
-    "test": "parcel html/test.html",
+    "test": "parcel html/test4.html",
     "start": "parcel html/test.html -p 8003",
     "build": "npx babel src -d dist --verbose"
   },
