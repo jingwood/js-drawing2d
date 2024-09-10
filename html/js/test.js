@@ -3,7 +3,7 @@
 // Javascript canvas 2D drawing library. Supports both immediate-mode rendering
 // and 2D scene rendering.
 //
-// MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
+// MIT License (c) 2015-2024 Jingwood, UNVELL Inc., All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Vec2, Matrix3 } from "@jingwood/graphics-math";
@@ -88,7 +88,13 @@ window.addEventListener("load", e => {
   p1.isReceiveHover = true;
   p1.onclick = e => p1.angle += 5;
   p1.ondrag = e => { p1.offset(e.movement); e.isProcessed = true; }
-  p1.ondraw = g => g.drawText(Math.round(p1.worldOrigin.x) + "," + Math.round(p1.worldOrigin.y), { x: 0, y: 0 });
+  p1.ondraw = g => {
+    g.pushRotation(-45, p1.origin.x, p1.origin.y)
+    g.pushScale(2, 2)
+    g.drawText(Math.round(p1.worldOrigin.x) + "," + Math.round(p1.worldOrigin.y), { x: 0, y: 0 });
+    g.popTransform()
+    g.popTransform()
+  }
   const pr1 = new Rectangle2D();
   pr1.origin.set(100, 0);
   p1.add(pr1);
@@ -165,8 +171,8 @@ window.addEventListener("load", e => {
     }
     scene.on("draw", g => g.drawRect(rect, 4, "black", null, "dash"));
     
-    console.log(selectedObjs);
-  })();
+    console.log(selectedObjs)
+  })()
 
 
   // const r1 = new Rectangle2D();

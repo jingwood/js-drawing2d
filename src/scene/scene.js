@@ -3,7 +3,7 @@
 // Javascript canvas 2D drawing library. Supports both immediate-mode rendering
 // and 2D scene rendering.
 //
-// MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
+// MIT License (c) 2015-2024 Jingwood, UNVELL Inc., All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Vec2, Matrix3 } from '@jingwood/graphics-math'
@@ -42,7 +42,7 @@ export class Scene2D {
 
     this.requestedUpdateFrame = true
 
-    if (oldStatus === false && this.renderer) {
+    if (!this.animation && oldStatus === false && this.renderer) {
       requestAnimationFrame((_) => this.renderer.render())
     }
   }
@@ -243,4 +243,8 @@ export class Scene2D {
 }
 
 // Event declarations
-new EventDispatcher(Scene2D).registerEvents('mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseout', 'mousewheel', 'begindrag', 'drag', 'enddrag', 'getFocus', 'lostFocus', 'keyup', 'keydown', 'objectAdd', 'objectRemove', 'draw')
+new EventDispatcher(Scene2D).registerEvents('mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseout', 'mousewheel', 
+  'begindrag', 'drag', 'enddrag', 
+  'getFocus', 'lostFocus', 
+  'keyup', 'keydown', 
+  'objectAdd', 'objectRemove', 'draw', 'frame')

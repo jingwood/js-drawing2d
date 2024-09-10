@@ -3,7 +3,7 @@
 // Javascript canvas 2D drawing library. Supports both immediate-mode rendering
 // and 2D scene rendering.
 //
-// MIT License (C) 2015-2020 Jingwood, unvell.com, all rights reserved.
+// MIT License (c) 2015-2024 Jingwood, UNVELL Inc., All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Graphics2D } from './graphics.js'
@@ -161,12 +161,13 @@ export class Renderer2D {
 
   render() {
     if (this.currentScene && (this.currentScene.animation || this.currentScene.requestedUpdateFrame)) {
-      requestAnimationFrame((_) => this.render())
+      requestAnimationFrame(_ => this.render())
 
       this.graphics.resetTransform()
       this.clear()
 
       this.currentScene.requestedUpdateFrame = false
+      this.currentScene.onframe()
       this.currentScene.render(this.graphics)
     }
   }
