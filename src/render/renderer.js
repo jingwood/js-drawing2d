@@ -167,6 +167,7 @@ export class Renderer2D {
       this.clear()
 
       this.currentScene.requestedUpdateFrame = false
+      this.currentScene.onframe()
       this.currentScene.render(this.graphics)
     }
   }

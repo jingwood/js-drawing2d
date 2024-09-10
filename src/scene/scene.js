@@ -243,4 +243,8 @@ export class Scene2D {
 }
 
 // Event declarations
-new EventDispatcher(Scene2D).registerEvents('mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseout', 'mousewheel', 'begindrag', 'drag', 'enddrag', 'getFocus', 'lostFocus', 'keyup', 'keydown', 'objectAdd', 'objectRemove', 'draw')
+new EventDispatcher(Scene2D).registerEvents('mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseout', 'mousewheel', 
+  'begindrag', 'drag', 'enddrag', 
+  'getFocus', 'lostFocus', 
+  'keyup', 'keydown', 
+  'objectAdd', 'objectRemove', 'draw', 'frame')
