@@ -42,7 +42,7 @@ export class Scene2D {
 
     this.requestedUpdateFrame = true
 
-    if (oldStatus === false && this.renderer) {
+    if (!this.animation && oldStatus === false && this.renderer) {
       requestAnimationFrame((_) => this.renderer.render())
     }
   }

@@ -161,7 +161,7 @@ export class Renderer2D {
 
   render() {
     if (this.currentScene && (this.currentScene.animation || this.currentScene.requestedUpdateFrame)) {
-      requestAnimationFrame((_) => this.render())
+      requestAnimationFrame(_ => this.render())
 
       this.graphics.resetTransform()
       this.clear()
