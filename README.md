@@ -49,4 +49,4 @@ renderer.show(scene);
 
 Released under MIT license.
 
-Copyright (C) 2020 Jingwood & unvell.com, all rights reserved.
+Copyright (c) 2015-2024 Jingwood, UNVELL Inc., All rights reserved.
