@@ -14,7 +14,7 @@ import { Rect } from '../types/rect'
 import { Size } from '../types/size'
 import { Renderer2D } from '../render/renderer'
 import { Graphics2D } from '../render/graphics'
-import { MathFunctions } from '@jingwood/graphics-math/'
+import { MathFunctions } from '@jingwood/graphics-math'
 
 export class Object2D {
   constructor() {
