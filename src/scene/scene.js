@@ -8,7 +8,7 @@
 
 import { Vec2, Matrix3 } from '@jingwood/graphics-math'
 import { EventDispatcher } from '@jingwood/input-control'
-import { EventArgument } from './eventarg'
+import { EventArgument } from './eventarg.js'
 
 export class Scene2D {
   constructor() {

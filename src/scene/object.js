@@ -8,12 +8,12 @@
 
 import { Vec2, Matrix3, BoundingBox2D as BBox2D } from '@jingwood/graphics-math'
 import { EventDispatcher } from '@jingwood/input-control'
-import { ObjectStyle } from './style'
-import { EventArgument } from './eventarg'
-import { Rect } from '../types/rect'
-import { Size } from '../types/size'
-import { Renderer2D } from '../render/renderer'
-import { Graphics2D } from '../render/graphics'
+import { ObjectStyle } from './style.js'
+import { EventArgument } from './eventarg.js'
+import { Rect } from '../types/rect.js'
+import { Size } from '../types/size.js'
+import { Renderer2D } from '../render/renderer.js'
+import { Graphics2D } from '../render/graphics.js'
 import { MathFunctions } from '@jingwood/graphics-math'
 
 export class Object2D {

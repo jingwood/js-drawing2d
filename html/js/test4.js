@@ -12,10 +12,10 @@ import { MathFunctions2 as _mf2 } from "@jingwood/graphics-math";
 import { Renderer2D } from "../../src/index.js";
 import { Scene2D } from "../../src/index.js";
 import { Rectangle2D } from "../../src/index.js";
-// import { Ellipse } from "../../src/shapes/ellipse";
-// import { Rect } from "../../src/types/rect";
+// import { Ellipse2D } from "../../src/shapes/ellipse.js";
+// import { Rect } from "../../src/types/rect.js";
 // import { Object2D } from "../../src/scene/object.js";
-// import { Size } from "../../src/types/size";
+// import { Size } from "../../src/types/size.js";
 // import { Polygon } from "../../src/types/polygon.js";
 // import { Polygon2D, Line2D } from "../../src/index.js";
 

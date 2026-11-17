@@ -7,8 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 import { Graphics2D } from './graphics.js'
-import { InputController } from '@jingwood/input-control'
-import { Keys } from '@jingwood/input-control/dist/keyboard'
+import { InputController, Keys } from '@jingwood/input-control'
 import { Matrix3 } from '@jingwood/graphics-math'
 
 export class Renderer2D {

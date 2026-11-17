@@ -9,7 +9,7 @@
 import { Vec2, BoundingBox2D as BBox2D, MathFunctions2 } from "@jingwood/graphics-math";
 import { LineSegment } from "./line.js"
 import { Size } from "./size.js";
-import { Polygon } from "./polygon";
+import { Polygon } from "./polygon.js";
 
 export class Rect {
 	constructor() {
